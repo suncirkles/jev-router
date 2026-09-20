@@ -29,6 +29,8 @@ The current baseline uses TwinRouterBench's static SWE-bench trajectory bank and
 
 The static SWE labels are routing supervision, and the upstream manifest marks them as weak labels rather than strict ground truth. Static results measure agreement with the benchmark's cheapest-sufficient-tier labels. They do not prove that a routed coding agent resolves the issue; the benchmark's dynamic SWE-bench track is the outcome test.
 
+The first calibrated result is recorded in [the calibration report](evidence/twin-calibrated-001/REPORT.md). Calibration recovers step-level signal, but its safe q90 policy routes every holdout step to `mid_high` or `high` and saves only 2.27% under the benchmark's failure-aware cost model. Dynamic execution is deferred until the static policy preserves trajectories without collapsing toward always-high.
+
 ```powershell
 $env:PYTHONPATH = "$PWD\src;$PWD\harness\src"
 $python = 'D:\projects\Gen-AI\agentic\agentic\Scripts\python.exe'

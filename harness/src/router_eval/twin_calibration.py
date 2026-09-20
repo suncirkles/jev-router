@@ -190,6 +190,11 @@ def _score(rows: list[dict[str, Any]], predictions: list[int], section11: Any) -
     return _static_summary(records, [], correct, section11)
 
 
+def _full_score(rows: list[dict[str, Any]], predictions: list[int], section11: Any) -> dict[str, Any]:
+    """TwinRouterBench paper-v2 failure-aware, cache-aware score."""
+    return section11.compute_v2_scores(_eval_rows(rows, predictions))
+
+
 def _model_artifact(model: Pipeline) -> dict[str, Any]:
     scale = model.named_steps["scale"]
     classifier = model.named_steps["classifier"]
@@ -268,6 +273,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "campaign_accounted_cost_usd": client.accounted(),
         "holdout": {name: _score(holdout, predictions, section11) for name, predictions in policies.items()},
     }
+    if args.full_cost_scores:
+        result["holdout_v2"] = {
+            name: _full_score(holdout, predictions, section11)
+            for name, predictions in policies.items()
+        }
     (output / "results.json").write_text(
         json.dumps(result, indent=2, ensure_ascii=False, allow_nan=False), encoding="utf-8"
     )
@@ -281,6 +291,7 @@ def main() -> None:
     parser.add_argument("--journal", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--spend-cap", type=float, default=0.20)
+    parser.add_argument("--full-cost-scores", action="store_true")
     args = parser.parse_args()
     print(json.dumps(run(args), indent=2, ensure_ascii=True, allow_nan=False))
 
