@@ -1,0 +1,19 @@
+{
+  "checkpoint": "routellm/mf_gpt4_augmented",
+  "revision": "5eb3dc745cbe7cb16ca342ceb83b7f6ecf8c77c5",
+  "weights_sha256": "bfc93d473b48f8b85ce719f0d7e8bb86a139fa052e8b0c3ac387eabf45e47293",
+  "source_commit": "0b64fdafe049e596a3f5657c219329f24af24198",
+  "source_hashes": {
+    "mf.py": "81072b840e6dd389888e9f7a7198342693beab37b06aeab690083d67663da7ba",
+    "routers.py": "2393da77f9049970f57dd6d8eada3cc68e99506b2a547e7662e7d2d56b5065b8",
+    "LICENSE.routellm": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1"
+  },
+  "scoring_models": [
+    "gpt-4-1106-preview",
+    "mixtral-8x7b-instruct-v0.1"
+  ],
+  "model_ids": [
+    24,
+    36
+  ]
+}

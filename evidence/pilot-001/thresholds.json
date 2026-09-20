@@ -1,0 +1,6 @@
+{
+  "mf_default": 0.5,
+  "mf_calibrated": 0.3769900683497337,
+  "length_calibrated": 2071.5,
+  "objective": "50% strong allocation on calibration prompts; no outcome labels"
+}

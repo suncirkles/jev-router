@@ -1,0 +1,901 @@
+{
+  "dataset": "NPULH/LLMRouterBench",
+  "revision": "0e5af1b84bf73437a01a1849c0f1d2468baa93fc",
+  "url": "https://huggingface.co/datasets/NPULH/LLMRouterBench/resolve/0e5af1b84bf73437a01a1849c0f1d2468baa93fc/bench-release.tar.gz",
+  "members": [
+    {
+      "model": "gemini-2.5-flash",
+      "path": "bench-release/livecodebench/test/gemini-2.5-flash/livecodebench-test-gemini-2.5-flash-20251013_003249.json",
+      "sha256": "902afe4bfa74465f524c21ea69b81a18015694929d59703f1647582db9089b36",
+      "size": 18615974
+    },
+    {
+      "model": "gpt-5",
+      "path": "bench-release/livecodebench/test/gpt-5/livecodebench-test-gpt-5-20251013_115531.json",
+      "sha256": "68871a481043a8d129daaf300edc68b94f95df87ba676814c42bbc6bc2f81ad6",
+      "size": 6842474
+    }
+  ],
+  "scanned_members": [
+    {
+      "path": "bench-release",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/DeepHermes-3-Llama-3-8B-Preview",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/DeepHermes-3-Llama-3-8B-Preview/arenahard-coding-DeepHermes-3-Llama-3-8B-Preview-20251029_012339.json",
+      "size": 6563977
+    },
+    {
+      "path": "bench-release/arenahard_coding/DeepSeek-R1-Distill-Qwen-7B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/DeepSeek-R1-Distill-Qwen-7B/arenahard-coding-DeepSeek-R1-Distill-Qwen-7B-20251028_184158.json",
+      "size": 8514197
+    },
+    {
+      "path": "bench-release/arenahard_coding/Qwen2.5-Coder-7B-Instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/Qwen2.5-Coder-7B-Instruct/arenahard-coding-Qwen2.5-Coder-7B-Instruct-20251029_003751.json",
+      "size": 3538708
+    },
+    {
+      "path": "bench-release/arenahard_coding/qwen3-235b-a22b-2507",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/qwen3-235b-a22b-2507/arenahard-coding-qwen3-235b-a22b-2507-20251029_201146.json",
+      "size": 4926477
+    },
+    {
+      "path": "bench-release/arenahard_coding/deepseek-v3.1-terminus",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/deepseek-v3.1-terminus/arenahard-coding-deepseek-v3.1-terminus-20251029_190331.json",
+      "size": 5010291
+    },
+    {
+      "path": "bench-release/arenahard_coding/Llama-3.1-8B-Instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/Llama-3.1-8B-Instruct/arenahard-coding-Llama-3.1-8B-Instruct-20251028_153200.json",
+      "size": 3847541
+    },
+    {
+      "path": "bench-release/arenahard_coding/MiniCPM4.1-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/MiniCPM4.1-8B/arenahard-coding-MiniCPM4.1-8B-20251029_055029.json",
+      "size": 17752884
+    },
+    {
+      "path": "bench-release/arenahard_coding/MiMo-7B-RL-0530",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/MiMo-7B-RL-0530/arenahard-coding-MiMo-7B-RL-0530-20251029_003341.json",
+      "size": 6099623
+    },
+    {
+      "path": "bench-release/arenahard_coding/gemini-2.5-flash",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/gemini-2.5-flash/arenahard-coding-gemini-2.5-flash-20251028_084349.json",
+      "size": 9356635
+    },
+    {
+      "path": "bench-release/arenahard_coding/claude-sonnet-4",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/claude-sonnet-4/arenahard-coding-claude-sonnet-4-20251029_191638.json",
+      "size": 5217590
+    },
+    {
+      "path": "bench-release/arenahard_coding/OpenThinker3-7B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/OpenThinker3-7B/arenahard-coding-OpenThinker3-7B-20251029_021713.json",
+      "size": 19682615
+    },
+    {
+      "path": "bench-release/arenahard_coding/internlm3-8b-instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/internlm3-8b-instruct/arenahard-coding-internlm3-8b-instruct-20251028_180016.json",
+      "size": 5453261
+    },
+    {
+      "path": "bench-release/arenahard_coding/Fin-R1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/Fin-R1/arenahard-coding-Fin-R1-20251029_005047.json",
+      "size": 4060429
+    },
+    {
+      "path": "bench-release/arenahard_coding/cogito-v1-preview-llama-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/cogito-v1-preview-llama-8B/arenahard-coding-cogito-v1-preview-llama-8B-20251028_165156.json",
+      "size": 4611228
+    },
+    {
+      "path": "bench-release/arenahard_coding/glm-4-9b-chat",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/glm-4-9b-chat/arenahard-coding-glm-4-9b-chat-20251028_161621.json",
+      "size": 4020781
+    },
+    {
+      "path": "bench-release/arenahard_coding/GLM-Z1-9B-0414",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/GLM-Z1-9B-0414/arenahard-coding-GLM-Z1-9B-0414-20251029_015203.json",
+      "size": 15055049
+    },
+    {
+      "path": "bench-release/arenahard_coding/gemini-2.5-pro",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/gemini-2.5-pro/arenahard-coding-gemini-2.5-pro-20251029_190213.json",
+      "size": 5990294
+    },
+    {
+      "path": "bench-release/arenahard_coding/Llama-3.1-Nemotron-Nano-8B-v1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/Llama-3.1-Nemotron-Nano-8B-v1/arenahard-coding-Llama-3.1-Nemotron-Nano-8B-v1-20251028_155651.json",
+      "size": 8230664
+    },
+    {
+      "path": "bench-release/arenahard_coding/Intern-S1-mini",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/Intern-S1-mini/arenahard-coding-Intern-S1-mini-20251029_065816.json",
+      "size": 13676787
+    },
+    {
+      "path": "bench-release/arenahard_coding/gemma-2-9b-it",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/gemma-2-9b-it/arenahard-coding-gemma-2-9b-it-20251028_152437.json",
+      "size": 2967518
+    },
+    {
+      "path": "bench-release/arenahard_coding/kimi-k2-0905",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/kimi-k2-0905/arenahard-coding-kimi-k2-0905-20251029_210356.json",
+      "size": 3798887
+    },
+    {
+      "path": "bench-release/arenahard_coding/qwen3-235b-a22b-thinking-2507",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/qwen3-235b-a22b-thinking-2507/arenahard-coding-qwen3-235b-a22b-thinking-2507-20251030_000339.json",
+      "size": 4616893
+    },
+    {
+      "path": "bench-release/arenahard_coding/Llama-3.1-8B-UltraMedical",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/Llama-3.1-8B-UltraMedical/arenahard-coding-Llama-3.1-8B-UltraMedical-20251028_152825.json",
+      "size": 3777099
+    },
+    {
+      "path": "bench-release/arenahard_coding/Qwen3-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/Qwen3-8B/arenahard-coding-Qwen3-8B-20251028_181153.json",
+      "size": 12603401
+    },
+    {
+      "path": "bench-release/arenahard_coding/granite-3.3-8b-instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/granite-3.3-8b-instruct/arenahard-coding-granite-3.3-8b-instruct-20251029_004129.json",
+      "size": 2897928
+    },
+    {
+      "path": "bench-release/arenahard_coding/DeepSeek-R1-0528-Qwen3-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/DeepSeek-R1-0528-Qwen3-8B/arenahard-coding-DeepSeek-R1-0528-Qwen3-8B-20251028_174953.json",
+      "size": 13545971
+    },
+    {
+      "path": "bench-release/arenahard_coding/gpt-5-chat",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/gpt-5-chat/arenahard-coding-gpt-5-chat-20251029_184248.json",
+      "size": 3674223
+    },
+    {
+      "path": "bench-release/arenahard_coding/intern-s1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/intern-s1/arenahard-coding-intern-s1-20251029_034530.json",
+      "size": 3757356
+    },
+    {
+      "path": "bench-release/arenahard_coding/gpt-5",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/gpt-5/arenahard-coding-gpt-5-20251029_194015.json",
+      "size": 4617718
+    },
+    {
+      "path": "bench-release/arenahard_coding/NVIDIA-Nemotron-Nano-9B-v2",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/NVIDIA-Nemotron-Nano-9B-v2/arenahard-coding-NVIDIA-Nemotron-Nano-9B-v2-20251029_012630.json",
+      "size": 11088773
+    },
+    {
+      "path": "bench-release/arenahard_coding/deepseek-r1-0528",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/deepseek-r1-0528/arenahard-coding-deepseek-r1-0528-20251030_003959.json",
+      "size": 13040886
+    },
+    {
+      "path": "bench-release/arenahard_coding/deepseek-v3-0324",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/deepseek-v3-0324/arenahard-coding-deepseek-v3-0324-20251029_205720.json",
+      "size": 4104606
+    },
+    {
+      "path": "bench-release/arenahard_coding/glm-4.6",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arenahard_coding/glm-4.6/arenahard-coding-glm-4.6-20251029_203850.json",
+      "size": 6112697
+    },
+    {
+      "path": "bench-release/winogrande",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/DeepHermes-3-Llama-3-8B-Preview",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/DeepHermes-3-Llama-3-8B-Preview/winogrande-valid-DeepHermes-3-Llama-3-8B-Preview-20251019_064322.json",
+      "size": 2228505
+    },
+    {
+      "path": "bench-release/winogrande/valid/DeepSeek-R1-Distill-Qwen-7B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/DeepSeek-R1-Distill-Qwen-7B/winogrande-valid-DeepSeek-R1-Distill-Qwen-7B-20251019_064315.json",
+      "size": 15136717
+    },
+    {
+      "path": "bench-release/winogrande/valid/Qwen2.5-Coder-7B-Instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/Qwen2.5-Coder-7B-Instruct/winogrande-valid-Qwen2.5-Coder-7B-Instruct-20251019_064331.json",
+      "size": 1980173
+    },
+    {
+      "path": "bench-release/winogrande/valid/Llama-3.1-8B-Instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/Llama-3.1-8B-Instruct/winogrande-valid-Llama-3.1-8B-Instruct-20251019_064311.json",
+      "size": 2351191
+    },
+    {
+      "path": "bench-release/winogrande/valid/MiniCPM4.1-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/MiniCPM4.1-8B/winogrande-valid-MiniCPM4.1-8B-20251019_064327.json",
+      "size": 8641114
+    },
+    {
+      "path": "bench-release/winogrande/valid/MiMo-7B-RL-0530",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/MiMo-7B-RL-0530/winogrande-valid-MiMo-7B-RL-0530-20251019_064329.json",
+      "size": 8512610
+    },
+    {
+      "path": "bench-release/winogrande/valid/OpenThinker3-7B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/OpenThinker3-7B/winogrande-valid-OpenThinker3-7B-20251019_064330.json",
+      "size": 18464932
+    },
+    {
+      "path": "bench-release/winogrande/valid/internlm3-8b-instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/internlm3-8b-instruct/winogrande-valid-internlm3-8b-instruct-20251019_064325.json",
+      "size": 3055317
+    },
+    {
+      "path": "bench-release/winogrande/valid/Fin-R1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/Fin-R1/winogrande-valid-Fin-R1-20251019_064307.json",
+      "size": 5514171
+    },
+    {
+      "path": "bench-release/winogrande/valid/cogito-v1-preview-llama-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/cogito-v1-preview-llama-8B/winogrande-valid-cogito-v1-preview-llama-8B-20251019_064319.json",
+      "size": 1815542
+    },
+    {
+      "path": "bench-release/winogrande/valid/glm-4-9b-chat",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/glm-4-9b-chat/winogrande-valid-glm-4-9b-chat-20251019_064317.json",
+      "size": 1861152
+    },
+    {
+      "path": "bench-release/winogrande/valid/GLM-Z1-9B-0414",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/GLM-Z1-9B-0414/winogrande-valid-GLM-Z1-9B-0414-20251019_064326.json",
+      "size": 8020169
+    },
+    {
+      "path": "bench-release/winogrande/valid/Llama-3.1-Nemotron-Nano-8B-v1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/Llama-3.1-Nemotron-Nano-8B-v1/winogrande-valid-Llama-3.1-Nemotron-Nano-8B-v1-20251019_064316.json",
+      "size": 5032297
+    },
+    {
+      "path": "bench-release/winogrande/valid/Intern-S1-mini",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/Intern-S1-mini/winogrande-valid-Intern-S1-mini-20251019_064313.json",
+      "size": 33562766
+    },
+    {
+      "path": "bench-release/winogrande/valid/gemma-2-9b-it",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/gemma-2-9b-it/winogrande-valid-gemma-2-9b-it-20251019_064308.json",
+      "size": 1501679
+    },
+    {
+      "path": "bench-release/winogrande/valid/Llama-3.1-8B-UltraMedical",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/Llama-3.1-8B-UltraMedical/winogrande-valid-Llama-3.1-8B-UltraMedical-20251019_064309.json",
+      "size": 2885249
+    },
+    {
+      "path": "bench-release/winogrande/valid/Qwen3-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/Qwen3-8B/winogrande-valid-Qwen3-8B-20251019_064312.json",
+      "size": 6996986
+    },
+    {
+      "path": "bench-release/winogrande/valid/granite-3.3-8b-instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/granite-3.3-8b-instruct/winogrande-valid-granite-3.3-8b-instruct-20251019_064320.json",
+      "size": 1603026
+    },
+    {
+      "path": "bench-release/winogrande/valid/DeepSeek-R1-0528-Qwen3-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/DeepSeek-R1-0528-Qwen3-8B/winogrande-valid-DeepSeek-R1-0528-Qwen3-8B-20251019_064321.json",
+      "size": 11886135
+    },
+    {
+      "path": "bench-release/winogrande/valid/NVIDIA-Nemotron-Nano-9B-v2",
+      "size": 0
+    },
+    {
+      "path": "bench-release/winogrande/valid/NVIDIA-Nemotron-Nano-9B-v2/winogrande-valid-NVIDIA-Nemotron-Nano-9B-v2-20251019_064324.json",
+      "size": 5028176
+    },
+    {
+      "path": "bench-release/arcc",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/DeepHermes-3-Llama-3-8B-Preview",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/DeepHermes-3-Llama-3-8B-Preview/arcc-test-DeepHermes-3-Llama-3-8B-Preview-20251019_064036.json",
+      "size": 2018309
+    },
+    {
+      "path": "bench-release/arcc/test/DeepSeek-R1-Distill-Qwen-7B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/DeepSeek-R1-Distill-Qwen-7B/arcc-test-DeepSeek-R1-Distill-Qwen-7B-20251019_064029.json",
+      "size": 11384611
+    },
+    {
+      "path": "bench-release/arcc/test/Qwen2.5-Coder-7B-Instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/Qwen2.5-Coder-7B-Instruct/arcc-test-Qwen2.5-Coder-7B-Instruct-20251019_064046.json",
+      "size": 2295640
+    },
+    {
+      "path": "bench-release/arcc/test/Llama-3.1-8B-Instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/Llama-3.1-8B-Instruct/arcc-test-Llama-3.1-8B-Instruct-20251019_064020.json",
+      "size": 2539542
+    },
+    {
+      "path": "bench-release/arcc/test/MiniCPM4.1-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/MiniCPM4.1-8B/arcc-test-MiniCPM4.1-8B-20251019_064042.json",
+      "size": 7246007
+    },
+    {
+      "path": "bench-release/arcc/test/MiMo-7B-RL-0530",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/MiMo-7B-RL-0530/arcc-test-MiMo-7B-RL-0530-20251019_064043.json",
+      "size": 8295932
+    },
+    {
+      "path": "bench-release/arcc/test/OpenThinker3-7B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/OpenThinker3-7B/arcc-test-OpenThinker3-7B-20251019_064044.json",
+      "size": 17557080
+    },
+    {
+      "path": "bench-release/arcc/test/internlm3-8b-instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/internlm3-8b-instruct/arcc-test-internlm3-8b-instruct-20251019_064039.json",
+      "size": 2937948
+    },
+    {
+      "path": "bench-release/arcc/test/Fin-R1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/Fin-R1/arcc-test-Fin-R1-20251019_064009.json",
+      "size": 4920821
+    },
+    {
+      "path": "bench-release/arcc/test/cogito-v1-preview-llama-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/cogito-v1-preview-llama-8B/arcc-test-cogito-v1-preview-llama-8B-20251019_064033.json",
+      "size": 1905129
+    },
+    {
+      "path": "bench-release/arcc/test/glm-4-9b-chat",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/glm-4-9b-chat/arcc-test-glm-4-9b-chat-20251019_064031.json",
+      "size": 2276453
+    },
+    {
+      "path": "bench-release/arcc/test/GLM-Z1-9B-0414",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/GLM-Z1-9B-0414/arcc-test-GLM-Z1-9B-0414-20251019_064041.json",
+      "size": 5649954
+    },
+    {
+      "path": "bench-release/arcc/test/Llama-3.1-Nemotron-Nano-8B-v1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/Llama-3.1-Nemotron-Nano-8B-v1/arcc-test-Llama-3.1-Nemotron-Nano-8B-v1-20251019_064030.json",
+      "size": 3688534
+    },
+    {
+      "path": "bench-release/arcc/test/Intern-S1-mini",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/Intern-S1-mini/arcc-test-Intern-S1-mini-20251019_064027.json",
+      "size": 13965102
+    },
+    {
+      "path": "bench-release/arcc/test/gemma-2-9b-it",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/gemma-2-9b-it/arcc-test-gemma-2-9b-it-20251019_064013.json",
+      "size": 1598889
+    },
+    {
+      "path": "bench-release/arcc/test/Llama-3.1-8B-UltraMedical",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/Llama-3.1-8B-UltraMedical/arcc-test-Llama-3.1-8B-UltraMedical-20251019_064016.json",
+      "size": 2892743
+    },
+    {
+      "path": "bench-release/arcc/test/Qwen3-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/Qwen3-8B/arcc-test-Qwen3-8B-20251019_064026.json",
+      "size": 4749063
+    },
+    {
+      "path": "bench-release/arcc/test/granite-3.3-8b-instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/granite-3.3-8b-instruct/arcc-test-granite-3.3-8b-instruct-20251019_064034.json",
+      "size": 2106642
+    },
+    {
+      "path": "bench-release/arcc/test/DeepSeek-R1-0528-Qwen3-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/DeepSeek-R1-0528-Qwen3-8B/arcc-test-DeepSeek-R1-0528-Qwen3-8B-20251019_064035.json",
+      "size": 7536016
+    },
+    {
+      "path": "bench-release/arcc/test/NVIDIA-Nemotron-Nano-9B-v2",
+      "size": 0
+    },
+    {
+      "path": "bench-release/arcc/test/NVIDIA-Nemotron-Nano-9B-v2/arcc-test-NVIDIA-Nemotron-Nano-9B-v2-20251019_064038.json",
+      "size": 3829860
+    },
+    {
+      "path": "bench-release/livecodebench",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/DeepHermes-3-Llama-3-8B-Preview",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/DeepHermes-3-Llama-3-8B-Preview/livecodebench-test-DeepHermes-3-Llama-3-8B-Preview-20251005_093708.json",
+      "size": 6149123
+    },
+    {
+      "path": "bench-release/livecodebench/test/qwen3-235b-a22b-no-thinking",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/qwen3-235b-a22b-no-thinking/livecodebench-test-qwen3-235b-a22b-no-thinking-20251018_101900.json",
+      "size": 6544105
+    },
+    {
+      "path": "bench-release/livecodebench/test/DeepSeek-R1-Distill-Qwen-7B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/DeepSeek-R1-Distill-Qwen-7B/livecodebench-test-DeepSeek-R1-Distill-Qwen-7B-20251003_123505.json",
+      "size": 72603575
+    },
+    {
+      "path": "bench-release/livecodebench/test/gpt-4.1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/gpt-4.1/livecodebench-test-gpt-4.1-20251013_210140.json",
+      "size": 6816793
+    },
+    {
+      "path": "bench-release/livecodebench/test/Qwen2.5-Coder-7B-Instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/Qwen2.5-Coder-7B-Instruct/livecodebench-test-Qwen2.5-Coder-7B-Instruct-20251012_041011.json",
+      "size": 5954165
+    },
+    {
+      "path": "bench-release/livecodebench/test/qwen3-235b-a22b-2507",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/qwen3-235b-a22b-2507/livecodebench-test-qwen3-235b-a22b-2507-20251013_105352.json",
+      "size": 11149410
+    },
+    {
+      "path": "bench-release/livecodebench/test/deepseek-v3.1-terminus",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/deepseek-v3.1-terminus/livecodebench-test-deepseek-v3.1-terminus-20251024_102915.json",
+      "size": 9235999
+    },
+    {
+      "path": "bench-release/livecodebench/test/Llama-3.1-8B-Instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/Llama-3.1-8B-Instruct/livecodebench-test-Llama-3.1-8B-Instruct-20251002_125048.json",
+      "size": 6221578
+    },
+    {
+      "path": "bench-release/livecodebench/test/MiniCPM4.1-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/MiniCPM4.1-8B/livecodebench-test-MiniCPM4.1-8B-20251007_154649.json",
+      "size": 59078446
+    },
+    {
+      "path": "bench-release/livecodebench/test/MiMo-7B-RL-0530",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/MiMo-7B-RL-0530/livecodebench-test-MiMo-7B-RL-0530-20251008_165948.json",
+      "size": 12100880
+    },
+    {
+      "path": "bench-release/livecodebench/test/gemini-2.5-flash",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/gemini-2.5-flash/livecodebench-test-gemini-2.5-flash-20251013_003249.json",
+      "size": 18615974
+    },
+    {
+      "path": "bench-release/livecodebench/test/claude-sonnet-4",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/claude-sonnet-4/livecodebench-test-claude-sonnet-4-20251013_031811.json",
+      "size": 7920585
+    },
+    {
+      "path": "bench-release/livecodebench/test/OpenThinker3-7B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/OpenThinker3-7B/livecodebench-test-OpenThinker3-7B-20251009_090318.json",
+      "size": 77785242
+    },
+    {
+      "path": "bench-release/livecodebench/test/internlm3-8b-instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/internlm3-8b-instruct/livecodebench-test-internlm3-8b-instruct-20251006_141255.json",
+      "size": 6783498
+    },
+    {
+      "path": "bench-release/livecodebench/test/Fin-R1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/Fin-R1/livecodebench-test-Fin-R1-20251002_085319.json",
+      "size": 15345779
+    },
+    {
+      "path": "bench-release/livecodebench/test/cogito-v1-preview-llama-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/cogito-v1-preview-llama-8B/livecodebench-test-cogito-v1-preview-llama-8B-20251004_062214.json",
+      "size": 7912820
+    },
+    {
+      "path": "bench-release/livecodebench/test/glm-4-9b-chat",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/glm-4-9b-chat/livecodebench-test-glm-4-9b-chat-20251004_031845.json",
+      "size": 6132143
+    },
+    {
+      "path": "bench-release/livecodebench/test/openrouter",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/openrouter/livecodebench-test-openrouter-20251125_121727.json",
+      "size": 7941217
+    },
+    {
+      "path": "bench-release/livecodebench/test/GLM-Z1-9B-0414",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/GLM-Z1-9B-0414/livecodebench-test-GLM-Z1-9B-0414-20251006_213832.json",
+      "size": 46635691
+    },
+    {
+      "path": "bench-release/livecodebench/test/gemini-2.5-pro",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/gemini-2.5-pro/livecodebench-test-gemini-2.5-pro-20251013_130201.json",
+      "size": 10222878
+    },
+    {
+      "path": "bench-release/livecodebench/test/Llama-3.1-Nemotron-Nano-8B-v1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/Llama-3.1-Nemotron-Nano-8B-v1/livecodebench-test-Llama-3.1-Nemotron-Nano-8B-v1-20251003_140607.json",
+      "size": 25219944
+    },
+    {
+      "path": "bench-release/livecodebench/test/Intern-S1-mini",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/Intern-S1-mini/livecodebench-test-Intern-S1-mini-20251003_085101.json",
+      "size": 111884207
+    },
+    {
+      "path": "bench-release/livecodebench/test/gemma-2-9b-it",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/gemma-2-9b-it/livecodebench-test-gemma-2-9b-it-20251002_093236.json",
+      "size": 5541753
+    },
+    {
+      "path": "bench-release/livecodebench/test/kimi-k2-0905",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/kimi-k2-0905/livecodebench-test-kimi-k2-0905-20251017_155822.json",
+      "size": 12688889
+    },
+    {
+      "path": "bench-release/livecodebench/test/qwen3-235b-a22b-thinking-2507",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/qwen3-235b-a22b-thinking-2507/livecodebench-test-qwen3-235b-a22b-thinking-2507-20251019_210359.json",
+      "size": 8042460
+    },
+    {
+      "path": "bench-release/livecodebench/test/Llama-3.1-8B-UltraMedical",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/Llama-3.1-8B-UltraMedical/livecodebench-test-Llama-3.1-8B-UltraMedical-20251002_114115.json",
+      "size": 6337366
+    },
+    {
+      "path": "bench-release/livecodebench/test/Qwen3-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/Qwen3-8B/livecodebench-test-Qwen3-8B-20251002_155958.json",
+      "size": 54225958
+    },
+    {
+      "path": "bench-release/livecodebench/test/qwen3-235b-a22b-thinking",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/qwen3-235b-a22b-thinking/livecodebench-test-qwen3-235b-a22b-thinking-20251020_125722.json",
+      "size": 46098799
+    },
+    {
+      "path": "bench-release/livecodebench/test/granite-3.3-8b-instruct",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/granite-3.3-8b-instruct/livecodebench-test-granite-3.3-8b-instruct-20251005_062602.json",
+      "size": 5736433
+    },
+    {
+      "path": "bench-release/livecodebench/test/DeepSeek-R1-0528-Qwen3-8B",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/DeepSeek-R1-0528-Qwen3-8B/livecodebench-test-DeepSeek-R1-0528-Qwen3-8B-20251004_220338.json",
+      "size": 67302970
+    },
+    {
+      "path": "bench-release/livecodebench/test/gpt-5-chat",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/gpt-5-chat/livecodebench-test-gpt-5-chat-20251013_114327.json",
+      "size": 6495408
+    },
+    {
+      "path": "bench-release/livecodebench/test/intern-s1",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/intern-s1/livecodebench-test-intern-s1-20251018_082944.json",
+      "size": 6092248
+    },
+    {
+      "path": "bench-release/livecodebench/test/gpt-5",
+      "size": 0
+    },
+    {
+      "path": "bench-release/livecodebench/test/gpt-5/livecodebench-test-gpt-5-20251013_115531.json",
+      "size": 6842474
+    }
+  ]
+}
