@@ -1,0 +1,226 @@
+{
+  "experiment": "live-002-three-tier",
+  "task_ids": [
+    "easy_intervals",
+    "easy_normalize",
+    "hard_safe_paths",
+    "hard_ttl_cache",
+    "medium_allocation",
+    "medium_dependencies"
+  ],
+  "summaries": {
+    "always_economy": {
+      "name": "always_economy",
+      "tasks": 6,
+      "hidden_passes": 2,
+      "hidden_pass_rate": 0.3333333333333333,
+      "visible_passes": 3,
+      "total_cost": 0.009294482,
+      "cost_per_hidden_pass": 0.004647241,
+      "all_costs_measured": false
+    },
+    "always_standard": {
+      "name": "always_standard",
+      "tasks": 6,
+      "hidden_passes": 1,
+      "hidden_pass_rate": 0.16666666666666666,
+      "visible_passes": 1,
+      "total_cost": 0.291885075,
+      "cost_per_hidden_pass": 0.291885075,
+      "all_costs_measured": true
+    },
+    "always_frontier": {
+      "name": "always_frontier",
+      "tasks": 6,
+      "hidden_passes": 2,
+      "hidden_pass_rate": 0.3333333333333333,
+      "visible_passes": 6,
+      "total_cost": 0.163302,
+      "cost_per_hidden_pass": 0.081651,
+      "all_costs_measured": true
+    },
+    "auto_constrained": {
+      "name": "auto_constrained",
+      "tasks": 6,
+      "hidden_passes": 2,
+      "hidden_pass_rate": 0.3333333333333333,
+      "visible_passes": 5,
+      "total_cost": 0.01182469,
+      "cost_per_hidden_pass": 0.005912345,
+      "all_costs_measured": true
+    },
+    "auto_unrestricted": {
+      "name": "auto_unrestricted",
+      "tasks": 6,
+      "hidden_passes": 2,
+      "hidden_pass_rate": 0.3333333333333333,
+      "visible_passes": 4,
+      "total_cost": 0.0136407,
+      "cost_per_hidden_pass": 0.00682035,
+      "all_costs_measured": true
+    },
+    "jev_b1": {
+      "name": "jev_b1",
+      "tasks": 6,
+      "hidden_passes": 1,
+      "hidden_pass_rate": 0.16666666666666666,
+      "visible_passes": 2,
+      "total_cost": 0.22194936799999998,
+      "cost_per_hidden_pass": 0.22194936799999998,
+      "all_costs_measured": true
+    },
+    "hindsight_cheapest_pass": {
+      "name": "hindsight_cheapest_pass",
+      "tasks": 6,
+      "hidden_passes": 2,
+      "hidden_pass_rate": 0.3333333333333333,
+      "visible_passes": 3,
+      "total_cost": 0.009294482,
+      "cost_per_hidden_pass": 0.004647241,
+      "all_costs_measured": false
+    }
+  },
+  "diagnostics": {
+    "easy_intervals": {
+      "difficulty": "easy",
+      "jev_tier": "standard",
+      "cheapest_passing_tier": "economy",
+      "fixed_passes": {
+        "economy": true,
+        "standard": false,
+        "frontier": true
+      },
+      "under_routed": true,
+      "over_routed": true
+    },
+    "easy_normalize": {
+      "difficulty": "easy",
+      "jev_tier": "standard",
+      "cheapest_passing_tier": "economy",
+      "fixed_passes": {
+        "economy": true,
+        "standard": true,
+        "frontier": true
+      },
+      "under_routed": false,
+      "over_routed": true
+    },
+    "hard_safe_paths": {
+      "difficulty": "hard",
+      "jev_tier": "standard",
+      "cheapest_passing_tier": null,
+      "fixed_passes": {
+        "economy": false,
+        "standard": false,
+        "frontier": false
+      },
+      "under_routed": false,
+      "over_routed": false
+    },
+    "hard_ttl_cache": {
+      "difficulty": "hard",
+      "jev_tier": "frontier",
+      "cheapest_passing_tier": null,
+      "fixed_passes": {
+        "economy": false,
+        "standard": false,
+        "frontier": false
+      },
+      "under_routed": false,
+      "over_routed": false
+    },
+    "medium_allocation": {
+      "difficulty": "medium",
+      "jev_tier": "standard",
+      "cheapest_passing_tier": null,
+      "fixed_passes": {
+        "economy": false,
+        "standard": false,
+        "frontier": false
+      },
+      "under_routed": false,
+      "over_routed": false
+    },
+    "medium_dependencies": {
+      "difficulty": "medium",
+      "jev_tier": "standard",
+      "cheapest_passing_tier": null,
+      "fixed_passes": {
+        "economy": false,
+        "standard": false,
+        "frontier": false
+      },
+      "under_routed": false,
+      "over_routed": false
+    }
+  },
+  "auto_selected_models": {
+    "auto_constrained": {
+      "easy_intervals": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "easy_normalize": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "hard_safe_paths": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "hard_ttl_cache": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "medium_allocation": [
+        "z-ai/glm-5.3-flash"
+      ],
+      "medium_dependencies": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ]
+    },
+    "auto_unrestricted": {
+      "easy_intervals": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "easy_normalize": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "hard_safe_paths": [
+        "z-ai/glm-5.3-flash"
+      ],
+      "hard_ttl_cache": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "medium_allocation": [
+        "z-ai/glm-5.3-flash"
+      ],
+      "medium_dependencies": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ]
+    }
+  },
+  "actual_api_cost": 0.490165515,
+  "quality_scope": "Hidden behavioral tests and traces; maintainability/security outside stated requirements remain ungraded"
+}

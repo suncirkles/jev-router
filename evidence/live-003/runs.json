@@ -1,0 +1,1383 @@
+{
+  "always_economy": {
+    "easy_intervals": {
+      "task_id": "easy_intervals",
+      "difficulty": "easy",
+      "arm": "always_economy",
+      "requested_model": "z-ai/glm-5.3-flash",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "intervals.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "def collapse(values):\n    values = list(values)\n    if not values:\n        return \"\"\n    return \",\".join(str(value) for value in values)\n"
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "intervals.py",
+            "bytes": 1084
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": true,
+      "visible_output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "test_generator (test_hidden.HiddenCollapseTests.test_generator) ... ok\ntest_input_not_mutated (test_hidden.HiddenCollapseTests.test_input_not_mutated) ... ok\ntest_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) ... ok\ntest_negative_and_duplicates (test_hidden.HiddenCollapseTests.test_negative_and_duplicates) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.001s\n\nOK\n",
+      "cost": 0.000591018,
+      "all_costs_measured": true,
+      "edited": {
+        "intervals.py": "def collapse(values):\n    \"\"\"Collapse an iterable of integers into comma-joined ranges.\n\n    Consecutive integers are rendered as \"start-end\"; isolated values are\n    rendered bare. Duplicates are removed and the result is ascending.\n    Negative runs render literally (e.g. \"-3--1\"). Raises TypeError for\n    booleans or non-integers. The input is never mutated.\n    \"\"\"\n    items = list(values)\n\n    for item in items:\n        if isinstance(item, bool) or not isinstance(item, int):\n            raise TypeError(\n                \"collapse() expects integers, got {!r}\".format(type(item).__name__)\n            )\n\n    unique = sorted(set(items))\n    if not unique:\n        return \"\"\n\n    parts = []\n    start = previous = unique[0]\n    for value in unique[1:]:\n        if value == previous + 1:\n            previous = value\n        else:\n            parts.append(str(start) if start == previous else \"{}-{}\".format(start, previous))\n            start = previous = value\n    parts.append(str(start) if start == previous else \"{}-{}\".format(start, previous))\n\n    return \",\".join(parts)\n"
+      }
+    },
+    "easy_normalize": {
+      "task_id": "easy_normalize",
+      "difficulty": "easy",
+      "arm": "always_economy",
+      "requested_model": "z-ai/glm-5.3-flash",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "key_normalizer.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unicodedata\n\n\ndef normalize_key(value: str) -> str:\n    \"\"\"Return a stable identifier for a user supplied label.\"\"\"\n    raise NotImplementedError\n"
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "key_normalizer.py",
+            "bytes": 1142
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": true,
+      "visible_output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "test_non_ascii_letters_are_preserved (test_hidden.HiddenNormalizeKeyTests.test_non_ascii_letters_are_preserved) ... ok\ntest_non_string_rejected (test_hidden.HiddenNormalizeKeyTests.test_non_string_rejected) ... ok\ntest_runs_collapse (test_hidden.HiddenNormalizeKeyTests.test_runs_collapse) ... ok\ntest_unicode_nfkc_and_casefold (test_hidden.HiddenNormalizeKeyTests.test_unicode_nfkc_and_casefold) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.009s\n\nOK\n",
+      "cost": 0.001032564,
+      "all_costs_measured": true,
+      "edited": {
+        "key_normalizer.py": "import unicodedata\n\n\ndef normalize_key(value: str) -> str:\n    \"\"\"Return a stable identifier for a user supplied label.\n\n    The label must be a string. It is normalized with Unicode NFKC,\n    surrounding whitespace is stripped, and it is casefolded. Every\n    maximal run of non-alphanumeric characters (Unicode letters and\n    digits count as alphanumeric) is replaced with a single hyphen,\n    and leading/trailing hyphens are removed.\n\n    Raises:\n        TypeError: if ``value`` is not a string.\n        ValueError: if the normalized result is empty.\n    \"\"\"\n    if not isinstance(value, str):\n        raise TypeError(\"value must be a string\")\n\n    normalized = unicodedata.normalize(\"NFKC\", value).strip().casefold()\n\n    parts = []\n    pending_hyphen = False\n    for char in normalized:\n        if char.isalnum():\n            if pending_hyphen and parts:\n                parts.append(\"-\")\n            parts.append(char)\n            pending_hyphen = False\n        else:\n            pending_hyphen = True\n\n    result = \"\".join(parts).rstrip(\"-\")\n\n    if not result:\n        raise ValueError(\"normalized key is empty\")\n\n    return result\n"
+      }
+    },
+    "hard_safe_paths": {
+      "task_id": "hard_safe_paths",
+      "difficulty": "hard",
+      "arm": "always_economy",
+      "requested_model": "z-ai/glm-5.3-flash",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 3,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "safe_paths.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "from pathlib import Path\n\n\nclass UnsafePathError(ValueError):\n    pass\n\n\ndef build_extraction_plan(names, destination: Path):\n    raise NotImplementedError\n"
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unittest\nfrom pathlib import Path\n\nfrom safe_paths import UnsafePathError, build_extraction_plan\n\n\nclass SafePathTests(unittest.TestCase):\n    def test_normalizes_separators(self):\n        self.assertEqual(build_extraction_plan([\"a//b.txt\", \"c\\\\d.py\"], Path(\"out\")),\n                         [(\"a//b.txt\", Path(\"out/a/b.txt\")), (\"c\\\\d.py\", Path(\"out/c/d.py\"))])\n\n    def test_parent_rejected(self):\n        with self.assertRaises(UnsafePathError):\n            build_extraction_plan([\"a/../secret\"], Path(\"out\"))\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+        }
+      ],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators) ... ERROR\ntest_parent_rejected (test_visible.SafePathTests.test_parent_rejected) ... ERROR\n\n======================================================================\nERROR: test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 9, in test_normalizes_separators\n    self.assertEqual(build_extraction_plan([\"a//b.txt\", \"c\\\\d.py\"], Path(\"out\")),\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/safe_paths.py\", line 9, in build_extraction_plan\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_parent_rejected (test_visible.SafePathTests.test_parent_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 14, in test_parent_rejected\n    build_extraction_plan([\"a/../secret\"], Path(\"out\"))\n  File \"/workspace/safe_paths.py\", line 9, in build_extraction_plan\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.017s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_safe_paths/hidden_tests'\n",
+      "cost": 0.00270681,
+      "all_costs_measured": false,
+      "edited": {
+        "safe_paths.py": "from pathlib import Path\n\n\nclass UnsafePathError(ValueError):\n    pass\n\n\ndef build_extraction_plan(names, destination: Path):\n    raise NotImplementedError\n"
+      }
+    },
+    "hard_ttl_cache": {
+      "task_id": "hard_ttl_cache",
+      "difficulty": "hard",
+      "arm": "always_economy",
+      "requested_model": "z-ai/glm-5.3-flash",
+      "selected_models": [
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 1,
+      "tool_events": [],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ERROR\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ERROR\n\n======================================================================\nERROR: test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_cached_until_expired\n    cache = TTLCache(5, clock=lambda: now[0])\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_single_flight (test_visible.TTLCacheTests.test_single_flight)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 20, in test_single_flight\n    cache = TTLCache(10)\n            ^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.049s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_ttl_cache/hidden_tests'\n",
+      "cost": 0.00130944,
+      "all_costs_measured": true,
+      "edited": {
+        "ttl_cache.py": "import time\n\n\nclass TTLCache:\n    def __init__(self, ttl_seconds, clock=time.monotonic):\n        raise NotImplementedError\n\n    def get_or_compute(self, key, factory):\n        raise NotImplementedError\n\n    def clear(self):\n        raise NotImplementedError\n"
+      }
+    },
+    "medium_allocation": {
+      "task_id": "medium_allocation",
+      "difficulty": "medium",
+      "arm": "always_economy",
+      "requested_model": "z-ai/glm-5.3-flash",
+      "selected_models": [
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 1,
+      "tool_events": [],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_largest_remainder (test_visible.AllocationTests.test_largest_remainder) ... ERROR\ntest_zero_total (test_visible.AllocationTests.test_zero_total) ... ERROR\n\n======================================================================\nERROR: test_largest_remainder (test_visible.AllocationTests.test_largest_remainder)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 8, in test_largest_remainder\n    self.assertEqual(allocate(10, {\"a\": 1, \"b\": 1, \"c\": 1}), {\"a\": 4, \"b\": 3, \"c\": 3})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_zero_total (test_visible.AllocationTests.test_zero_total)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_zero_total\n    self.assertEqual(allocate(0, {\"a\": 2, \"b\": 1}), {\"a\": 0, \"b\": 0})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.039s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_allocation/hidden_tests'\n",
+      "cost": 0.00214685,
+      "all_costs_measured": true,
+      "edited": {
+        "allocation.py": "from decimal import Decimal\n\n\ndef allocate(total_cents, weights):\n    raise NotImplementedError\n"
+      }
+    },
+    "medium_dependencies": {
+      "task_id": "medium_dependencies",
+      "difficulty": "medium",
+      "arm": "always_economy",
+      "requested_model": "z-ai/glm-5.3-flash",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "class DependencyError(ValueError):\n    pass\n\n\ndef build_order(dependencies):\n    raise NotImplementedError\n"
+        },
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "dependencies.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "dependencies.py",
+            "bytes": 3968
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ok\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.003s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ok\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_dependencies/hidden_tests'\n",
+      "cost": 0.0015078000000000001,
+      "all_costs_measured": true,
+      "edited": {
+        "dependencies.py": "import heapq\n\n\nclass DependencyError(ValueError):\n    pass\n\n\ndef _is_string_like(value):\n    \"\"\"True for str/bytes-like objects that must not be used as dependency iterables.\"\"\"\n    return isinstance(value, (str, bytes, bytearray))\n\n\ndef build_order(dependencies):\n    \"\"\"Return a deterministic topological order of ``dependencies``.\n\n    ``dependencies`` maps each task name to an iterable of names that task\n    depends on. The returned order always picks the lexically smallest task\n    whose dependencies have already been satisfied.\n\n    Raises :class:`DependencyError` for empty/non-string names, string-like\n    dependency iterables, self-dependencies, unknown dependencies, and cycles.\n    The input is never mutated; duplicate dependency entries are ignored.\n    \"\"\"\n    if dependencies is None:\n        raise DependencyError(\"dependencies must be a mapping of task names to dependency iterables\")\n\n    try:\n        items = list(dependencies.items())\n    except AttributeError:\n        raise DependencyError(\n            \"dependencies must be a mapping of task names to dependency iterables\"\n        ) from None\n\n    # First pass: validate task names and collect the set of known tasks.\n    known = set()\n    tasks = []\n    for name, deps in items:\n        if not isinstance(name, str) or not name:\n            raise DependencyError(\n                \"task names must be non-empty strings, got {!r}\".format(name)\n            )\n        if name in known:\n            # Defensive: a mapping cannot contain duplicate keys, but guard\n            # anyway so the structure stays consistent.\n            raise DependencyError(\"duplicate task name: {!r}\".format(name))\n        known.add(name)\n        tasks.append((name, deps))\n\n    in_degree = {name: 0 for name in known}\n    dependents = {name: [] for name in known}\n\n    # Second pass: validate and normalize each dependency list.\n    for name, deps in tasks:\n        if deps is None:\n            raise DependencyError(\n                \"dependencies of task {!r} must be an iterable of names, got None\".format(name)\n            )\n        if _is_string_like(deps):\n            raise DependencyError(\n                \"dependencies of task {!r} must be an iterable of names, not a string\".format(name)\n            )\n        try:\n            iterator = iter(deps)\n        except TypeError:\n            raise DependencyError(\n                \"dependencies of task {!r} must be an iterable of names\".format(name)\n            ) from None\n\n        seen = set()\n        for dep in iterator:\n            if not isinstance(dep, str) or not dep:\n                raise DependencyError(\n                    \"dependency names must be non-empty strings, got {!r}\".format(dep)\n                )\n            if dep == name:\n                raise DependencyError(\"task {!r} cannot depend on itself\".format(name))\n            if dep not in known:\n                raise DependencyError(\n                    \"task {!r} depends on unknown task {!r}\".format(name, dep)\n                )\n            if dep in seen:\n                # Duplicate entries add no additional effect.\n                continue\n            seen.add(dep)\n            in_degree[name] += 1\n            dependents[dep].append(name)\n\n    # Kahn's algorithm with a heap so ties are broken lexically.\n    available = [name for name, degree in in_degree.items() if degree == 0]\n    heapq.heapify(available)\n    order = []\n    while available:\n        current = heapq.heappop(available)\n        order.append(current)\n        for dependent in dependents[current]:\n            in_degree[dependent] -= 1\n            if in_degree[dependent] == 0:\n                heapq.heappush(available, dependent)\n\n    if len(order) != len(known):\n        remaining = sorted(name for name, degree in in_degree.items() if degree > 0)\n        raise DependencyError(\n            \"dependency cycle detected involving: {}\".format(\", \".join(repr(n) for n in remaining))\n        )\n\n    return order\n"
+      }
+    }
+  },
+  "always_standard": {
+    "easy_intervals": {
+      "task_id": "easy_intervals",
+      "difficulty": "easy",
+      "arm": "always_standard",
+      "requested_model": "google/gemini-3.8-flash",
+      "selected_models": [
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "intervals.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... FAIL\n\n======================================================================\nFAIL: test_ranges (test_visible.CollapseTests.test_ranges)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 8, in test_ranges\n    self.assertEqual(collapse([1, 2, 3, 5, 8, 7]), \"1-3,5,7-8\")\nAssertionError: '1,2,3,5,8,7' != '1-3,5,7-8'\n- 1,2,3,5,8,7\n+ 1-3,5,7-8\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.018s\n\nFAILED (failures=1)\n"
+          }
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unittest\n\nfrom intervals import collapse\n\n\nclass CollapseTests(unittest.TestCase):\n    def test_ranges(self):\n        self.assertEqual(collapse([1, 2, 3, 5, 8, 7]), \"1-3,5,7-8\")\n\n    def test_empty(self):\n        self.assertEqual(collapse([]), \"\")\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+        }
+      ],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... FAIL\n\n======================================================================\nFAIL: test_ranges (test_visible.CollapseTests.test_ranges)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 8, in test_ranges\n    self.assertEqual(collapse([1, 2, 3, 5, 8, 7]), \"1-3,5,7-8\")\nAssertionError: '1,2,3,5,8,7' != '1-3,5,7-8'\n- 1,2,3,5,8,7\n+ 1-3,5,7-8\n\n\n----------------------------------------------------------------------\nRan 2 tests in 0.015s\n\nFAILED (failures=1)\n",
+      "hidden_output": "test_generator (test_hidden.HiddenCollapseTests.test_generator) ... FAIL\ntest_input_not_mutated (test_hidden.HiddenCollapseTests.test_input_not_mutated) ... ok\ntest_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) ... \n  test_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) (values=[True]) ... FAIL\n  test_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) (values=[1.0]) ... FAIL\n  test_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) (values=['1']) ... FAIL\ntest_negative_and_duplicates (test_hidden.HiddenCollapseTests.test_negative_and_duplicates) ... FAIL\n\n======================================================================\nFAIL: test_generator (test_hidden.HiddenCollapseTests.test_generator)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/hidden/test_hidden.py\", line 11, in test_generator\n    self.assertEqual(collapse(x for x in [4, 3, 2]), \"2-4\")\nAssertionError: '4,3,2' != '2-4'\n- 4,3,2\n+ 2-4\n\n\n======================================================================\nFAIL: test_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) (values=[True])\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/hidden/test_hidden.py\", line 20, in test_invalid_values\n    with self.subTest(values=values), self.assertRaises(TypeError):\n                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: TypeError not raised\n\n======================================================================\nFAIL: test_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) (values=[1.0])\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/hidden/test_hidden.py\", line 20, in test_invalid_values\n    with self.subTest(values=values), self.assertRaises(TypeError):\n                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: TypeError not raised\n\n======================================================================\nFAIL: test_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) (values=['1'])\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/hidden/test_hidden.py\", line 20, in test_invalid_values\n    with self.subTest(values=values), self.assertRaises(TypeError):\n                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: TypeError not raised\n\n======================================================================\nFAIL: test_negative_and_duplicates (test_hidden.HiddenCollapseTests.test_negative_and_duplicates)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/hidden/test_hidden.py\", line 8, in test_negative_and_duplicates\n    self.assertEqual(collapse([-1, -3, -2, 2, 1, -2, 4]), \"-3--1,1-2,4\")\nAssertionError: '-1,-3,-2,2,1,-2,4' != '-3--1,1-2,4'\n- -1,-3,-2,2,1,-2,4\n+ -3--1,1-2,4\n\n\n----------------------------------------------------------------------\nRan 4 tests in 0.031s\n\nFAILED (failures=5)\n",
+      "cost": 0.03515475,
+      "all_costs_measured": true,
+      "edited": {
+        "intervals.py": "def collapse(values):\n    values = list(values)\n    if not values:\n        return \"\"\n    return \",\".join(str(value) for value in values)\n"
+      }
+    },
+    "easy_normalize": {
+      "task_id": "easy_normalize",
+      "difficulty": "easy",
+      "arm": "always_standard",
+      "requested_model": "google/gemini-3.8-flash",
+      "selected_models": [
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash"
+      ],
+      "turns": 7,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "key_normalizer.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unicodedata\n\n\ndef normalize_key(value: str) -> str:\n    \"\"\"Return a stable identifier for a user supplied label.\"\"\"\n    raise NotImplementedError\n"
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unittest\n\nfrom key_normalizer import normalize_key\n\n\nclass NormalizeKeyTests(unittest.TestCase):\n    def test_ascii_and_punctuation(self):\n        self.assertEqual(normalize_key(\"  Hello,  World!  \"), \"hello-world\")\n\n    def test_empty_rejected(self):\n        with self.assertRaises(ValueError):\n            normalize_key(\" -- \")\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ERROR\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ERROR\n\n======================================================================\nERROR: test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 8, in test_ascii_and_punctuation\n    self.assertEqual(normalize_key(\"  Hello,  World!  \"), \"hello-world\")\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/key_normalizer.py\", line 6, in normalize_key\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 12, in test_empty_rejected\n    normalize_key(\" -- \")\n  File \"/workspace/key_normalizer.py\", line 6, in normalize_key\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.041s\n\nFAILED (errors=2)\n"
+          }
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "key_normalizer.py",
+            "bytes": 521
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.002s\n\nOK\n"
+          }
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unittest\n\nfrom key_normalizer import normalize_key\n\n\nclass NormalizeKeyTests(unittest.TestCase):\n    def test_ascii_and_punctuation(self):\n        self.assertEqual(normalize_key(\"  Hello,  World!  \"), \"hello-world\")\n\n    def test_empty_rejected(self):\n        with self.assertRaises(ValueError):\n            normalize_key(\" -- \")\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": true,
+      "visible_output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "test_non_ascii_letters_are_preserved (test_hidden.HiddenNormalizeKeyTests.test_non_ascii_letters_are_preserved) ... ok\ntest_non_string_rejected (test_hidden.HiddenNormalizeKeyTests.test_non_string_rejected) ... ok\ntest_runs_collapse (test_hidden.HiddenNormalizeKeyTests.test_runs_collapse) ... ok\ntest_unicode_nfkc_and_casefold (test_hidden.HiddenNormalizeKeyTests.test_unicode_nfkc_and_casefold) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.004s\n\nOK\n",
+      "cost": 0.028056750000000002,
+      "all_costs_measured": true,
+      "edited": {
+        "key_normalizer.py": "import re\nimport unicodedata\n\n\ndef normalize_key(value: str) -> str:\n    \"\"\"Return a stable identifier for a user supplied label.\"\"\"\n    if not isinstance(value, str):\n        raise TypeError(f\"Expected string, got {type(value).__name__}\")\n\n    value = unicodedata.normalize(\"NFKC\", value)\n    value = value.strip()\n    value = value.casefold()\n    value = re.sub(r\"[\\W_]+\", \"-\", value)\n    value = value.strip(\"-\")\n\n    if not value:\n        raise ValueError(\"Key cannot be empty after normalization\")\n\n    return value\n"
+      }
+    },
+    "hard_safe_paths": {
+      "task_id": "hard_safe_paths",
+      "difficulty": "hard",
+      "arm": "always_standard",
+      "requested_model": "google/gemini-3.8-flash",
+      "selected_models": [
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash"
+      ],
+      "turns": 5,
+      "tool_events": [
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators) ... ERROR\ntest_parent_rejected (test_visible.SafePathTests.test_parent_rejected) ... ERROR\n\n======================================================================\nERROR: test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 9, in test_normalizes_separators\n    self.assertEqual(build_extraction_plan([\"a//b.txt\", \"c\\\\d.py\"], Path(\"out\")),\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/safe_paths.py\", line 9, in build_extraction_plan\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_parent_rejected (test_visible.SafePathTests.test_parent_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 14, in test_parent_rejected\n    build_extraction_plan([\"a/../secret\"], Path(\"out\"))\n  File \"/workspace/safe_paths.py\", line 9, in build_extraction_plan\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.035s\n\nFAILED (errors=2)\n"
+          }
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "from pathlib import Path\n\n\nclass UnsafePathError(ValueError):\n    pass\n\n\ndef build_extraction_plan(names, destination: Path):\n    raise NotImplementedError\n"
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unittest\nfrom pathlib import Path\n\nfrom safe_paths import UnsafePathError, build_extraction_plan\n\n\nclass SafePathTests(unittest.TestCase):\n    def test_normalizes_separators(self):\n        self.assertEqual(build_extraction_plan([\"a//b.txt\", \"c\\\\d.py\"], Path(\"out\")),\n                         [(\"a//b.txt\", Path(\"out/a/b.txt\")), (\"c\\\\d.py\", Path(\"out/c/d.py\"))])\n\n    def test_parent_rejected(self):\n        with self.assertRaises(UnsafePathError):\n            build_extraction_plan([\"a/../secret\"], Path(\"out\"))\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+        },
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "safe_paths.py",
+            "tests/test_visible.py"
+          ]
+        }
+      ],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators) ... ERROR\ntest_parent_rejected (test_visible.SafePathTests.test_parent_rejected) ... ERROR\n\n======================================================================\nERROR: test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 9, in test_normalizes_separators\n    self.assertEqual(build_extraction_plan([\"a//b.txt\", \"c\\\\d.py\"], Path(\"out\")),\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/safe_paths.py\", line 9, in build_extraction_plan\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_parent_rejected (test_visible.SafePathTests.test_parent_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 14, in test_parent_rejected\n    build_extraction_plan([\"a/../secret\"], Path(\"out\"))\n  File \"/workspace/safe_paths.py\", line 9, in build_extraction_plan\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.029s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_safe_paths/hidden_tests'\n",
+      "cost": 0.042387,
+      "all_costs_measured": true,
+      "edited": {
+        "safe_paths.py": "from pathlib import Path\n\n\nclass UnsafePathError(ValueError):\n    pass\n\n\ndef build_extraction_plan(names, destination: Path):\n    raise NotImplementedError\n"
+      }
+    },
+    "hard_ttl_cache": {
+      "task_id": "hard_ttl_cache",
+      "difficulty": "hard",
+      "arm": "always_standard",
+      "requested_model": "google/gemini-3.8-flash",
+      "selected_models": [
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash"
+      ],
+      "turns": 7,
+      "tool_events": [
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ERROR\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ERROR\n\n======================================================================\nERROR: test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_cached_until_expired\n    cache = TTLCache(5, clock=lambda: now[0])\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_single_flight (test_visible.TTLCacheTests.test_single_flight)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 20, in test_single_flight\n    cache = TTLCache(10)\n            ^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.009s\n\nFAILED (errors=2)\n"
+          }
+        },
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "tests/test_visible.py",
+            "ttl_cache.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import threading\nimport time\nimport unittest\n\nfrom ttl_cache import TTLCache\n\n\nclass TTLCacheTests(unittest.TestCase):\n    def test_cached_until_expired(self):\n        now = [10.0]\n        cache = TTLCache(5, clock=lambda: now[0])\n        calls = []\n        self.assertEqual(cache.get_or_compute(\"x\", lambda: calls.append(1) or 7), 7)\n        self.assertEqual(cache.get_or_compute(\"x\", lambda: 8), 7)\n        now[0] = 16\n        self.assertEqual(cache.get_or_compute(\"x\", lambda: 8), 8)\n        self.assertEqual(len(calls), 1)\n\n    def test_single_flight(self):\n        cache = TTLCache(10)\n        barrier = threading.Barrier(4)\n        calls = []\n        results = []\n\n        def factory():\n            calls.append(1)\n            time.sleep(0.05)\n            return 9\n\n        def worker():\n            barrier.wait()\n            results.append(cache.get_or_compute(\"x\", factory))\n\n        threads = [threading.Thread(target=worker) for _ in range(4)]\n        for thread in threads:\n            thread.start()\n        for thread in threads:\n            thread.join(2)\n        self.assertEqual(results, [9] * 4)\n        self.assertEqual(len(calls), 1)\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ERROR\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ERROR\n\n======================================================================\nERROR: test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_cached_until_expired\n    cache = TTLCache(5, clock=lambda: now[0])\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_single_flight (test_visible.TTLCacheTests.test_single_flight)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 20, in test_single_flight\n    cache = TTLCache(10)\n            ^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.036s\n\nFAILED (errors=2)\n"
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ERROR\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ERROR\n\n======================================================================\nERROR: test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_cached_until_expired\n    cache = TTLCache(5, clock=lambda: now[0])\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_single_flight (test_visible.TTLCacheTests.test_single_flight)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 20, in test_single_flight\n    cache = TTLCache(10)\n            ^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.036s\n\nFAILED (errors=2)\n"
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ERROR\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ERROR\n\n======================================================================\nERROR: test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_cached_until_expired\n    cache = TTLCache(5, clock=lambda: now[0])\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_single_flight (test_visible.TTLCacheTests.test_single_flight)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 20, in test_single_flight\n    cache = TTLCache(10)\n            ^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.049s\n\nFAILED (errors=2)\n"
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ERROR\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ERROR\n\n======================================================================\nERROR: test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_cached_until_expired\n    cache = TTLCache(5, clock=lambda: now[0])\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_single_flight (test_visible.TTLCacheTests.test_single_flight)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 20, in test_single_flight\n    cache = TTLCache(10)\n            ^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.044s\n\nFAILED (errors=2)\n"
+          }
+        }
+      ],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ERROR\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ERROR\n\n======================================================================\nERROR: test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_cached_until_expired\n    cache = TTLCache(5, clock=lambda: now[0])\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_single_flight (test_visible.TTLCacheTests.test_single_flight)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 20, in test_single_flight\n    cache = TTLCache(10)\n            ^^^^^^^^^^^^\n  File \"/workspace/ttl_cache.py\", line 6, in __init__\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.036s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_ttl_cache/hidden_tests'\n",
+      "cost": 0.130903575,
+      "all_costs_measured": true,
+      "edited": {
+        "ttl_cache.py": "import time\n\n\nclass TTLCache:\n    def __init__(self, ttl_seconds, clock=time.monotonic):\n        raise NotImplementedError\n\n    def get_or_compute(self, key, factory):\n        raise NotImplementedError\n\n    def clear(self):\n        raise NotImplementedError\n"
+      }
+    },
+    "medium_allocation": {
+      "task_id": "medium_allocation",
+      "difficulty": "medium",
+      "arm": "always_standard",
+      "requested_model": "google/gemini-3.8-flash",
+      "selected_models": [
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash"
+      ],
+      "turns": 2,
+      "tool_events": [
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_largest_remainder (test_visible.AllocationTests.test_largest_remainder) ... ERROR\ntest_zero_total (test_visible.AllocationTests.test_zero_total) ... ERROR\n\n======================================================================\nERROR: test_largest_remainder (test_visible.AllocationTests.test_largest_remainder)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 8, in test_largest_remainder\n    self.assertEqual(allocate(10, {\"a\": 1, \"b\": 1, \"c\": 1}), {\"a\": 4, \"b\": 3, \"c\": 3})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_zero_total (test_visible.AllocationTests.test_zero_total)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_zero_total\n    self.assertEqual(allocate(0, {\"a\": 2, \"b\": 1}), {\"a\": 0, \"b\": 0})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.040s\n\nFAILED (errors=2)\n"
+          }
+        }
+      ],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_largest_remainder (test_visible.AllocationTests.test_largest_remainder) ... ERROR\ntest_zero_total (test_visible.AllocationTests.test_zero_total) ... ERROR\n\n======================================================================\nERROR: test_largest_remainder (test_visible.AllocationTests.test_largest_remainder)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 8, in test_largest_remainder\n    self.assertEqual(allocate(10, {\"a\": 1, \"b\": 1, \"c\": 1}), {\"a\": 4, \"b\": 3, \"c\": 3})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_zero_total (test_visible.AllocationTests.test_zero_total)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_zero_total\n    self.assertEqual(allocate(0, {\"a\": 2, \"b\": 1}), {\"a\": 0, \"b\": 0})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.046s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_allocation/hidden_tests'\n",
+      "cost": 0.01650975,
+      "all_costs_measured": true,
+      "edited": {
+        "allocation.py": "from decimal import Decimal\n\n\ndef allocate(total_cents, weights):\n    raise NotImplementedError\n"
+      }
+    },
+    "medium_dependencies": {
+      "task_id": "medium_dependencies",
+      "difficulty": "medium",
+      "arm": "always_standard",
+      "requested_model": "google/gemini-3.8-flash",
+      "selected_models": [
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash",
+        "google/gemini-3.8-flash"
+      ],
+      "turns": 5,
+      "tool_events": [
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": false,
+            "returncode": 1,
+            "output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ERROR\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ERROR\n\n======================================================================\nERROR: test_cycle (test_visible.DependencyTests.test_cycle)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 13, in test_cycle\n    build_order({\"a\": [\"b\"], \"b\": [\"a\"]})\n  File \"/workspace/dependencies.py\", line 6, in build_order\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_deterministic_order (test_visible.DependencyTests.test_deterministic_order)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 9, in test_deterministic_order\n    self.assertEqual(build_order(graph), [\"build\", \"docs\", \"test\", \"deploy\"])\n                     ^^^^^^^^^^^^^^^^^^\n  File \"/workspace/dependencies.py\", line 6, in build_order\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.040s\n\nFAILED (errors=2)\n"
+          }
+        },
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "dependencies.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "class DependencyError(ValueError):\n    pass\n\n\ndef build_order(dependencies):\n    raise NotImplementedError\n"
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unittest\n\nfrom dependencies import DependencyError, build_order\n\n\nclass DependencyTests(unittest.TestCase):\n    def test_deterministic_order(self):\n        graph = {\"deploy\": [\"build\", \"test\"], \"test\": [\"build\"], \"build\": [], \"docs\": []}\n        self.assertEqual(build_order(graph), [\"build\", \"docs\", \"test\", \"deploy\"])\n\n    def test_cycle(self):\n        with self.assertRaises(DependencyError):\n            build_order({\"a\": [\"b\"], \"b\": [\"a\"]})\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+        }
+      ],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ERROR\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ERROR\n\n======================================================================\nERROR: test_cycle (test_visible.DependencyTests.test_cycle)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 13, in test_cycle\n    build_order({\"a\": [\"b\"], \"b\": [\"a\"]})\n  File \"/workspace/dependencies.py\", line 6, in build_order\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_deterministic_order (test_visible.DependencyTests.test_deterministic_order)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 9, in test_deterministic_order\n    self.assertEqual(build_order(graph), [\"build\", \"docs\", \"test\", \"deploy\"])\n                     ^^^^^^^^^^^^^^^^^^\n  File \"/workspace/dependencies.py\", line 6, in build_order\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.031s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_dependencies/hidden_tests'\n",
+      "cost": 0.03887325,
+      "all_costs_measured": true,
+      "edited": {
+        "dependencies.py": "class DependencyError(ValueError):\n    pass\n\n\ndef build_order(dependencies):\n    raise NotImplementedError\n"
+      }
+    }
+  },
+  "always_frontier": {
+    "easy_intervals": {
+      "task_id": "easy_intervals",
+      "difficulty": "easy",
+      "arm": "always_frontier",
+      "requested_model": "openai/gpt-5.6-sol",
+      "selected_models": [
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol"
+      ],
+      "turns": 3,
+      "tool_events": [
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "intervals.py",
+            "bytes": 770
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": true,
+      "visible_output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "test_generator (test_hidden.HiddenCollapseTests.test_generator) ... ok\ntest_input_not_mutated (test_hidden.HiddenCollapseTests.test_input_not_mutated) ... ok\ntest_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) ... ok\ntest_negative_and_duplicates (test_hidden.HiddenCollapseTests.test_negative_and_duplicates) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.001s\n\nOK\n",
+      "cost": 0.008312,
+      "all_costs_measured": true,
+      "edited": {
+        "intervals.py": "def collapse(values):\n    \"\"\"Collapse an iterable of integers into comma-separated ranges.\"\"\"\n    unique_values = set()\n    for value in values:\n        if isinstance(value, bool) or not isinstance(value, int):\n            raise TypeError(\"collapse() values must be integers\")\n        unique_values.add(value)\n\n    ordered = sorted(unique_values)\n    if not ordered:\n        return \"\"\n\n    parts = []\n    start = previous = ordered[0]\n\n    for value in ordered[1:]:\n        if value == previous + 1:\n            previous = value\n            continue\n\n        parts.append(str(start) if start == previous else f\"{start}-{previous}\")\n        start = previous = value\n\n    parts.append(str(start) if start == previous else f\"{start}-{previous}\")\n    return \",\".join(parts)\n"
+      }
+    },
+    "easy_normalize": {
+      "task_id": "easy_normalize",
+      "difficulty": "easy",
+      "arm": "always_frontier",
+      "requested_model": "openai/gpt-5.6-sol",
+      "selected_models": [
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol"
+      ],
+      "turns": 3,
+      "tool_events": [
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "key_normalizer.py",
+            "bytes": 692
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": true,
+      "visible_output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "test_non_ascii_letters_are_preserved (test_hidden.HiddenNormalizeKeyTests.test_non_ascii_letters_are_preserved) ... ok\ntest_non_string_rejected (test_hidden.HiddenNormalizeKeyTests.test_non_string_rejected) ... ok\ntest_runs_collapse (test_hidden.HiddenNormalizeKeyTests.test_runs_collapse) ... ok\ntest_unicode_nfkc_and_casefold (test_hidden.HiddenNormalizeKeyTests.test_unicode_nfkc_and_casefold) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.001s\n\nOK\n",
+      "cost": 0.00853,
+      "all_costs_measured": true,
+      "edited": {
+        "key_normalizer.py": "import unicodedata\n\n\ndef normalize_key(value: str) -> str:\n    \"\"\"Return a stable identifier for a user supplied label.\"\"\"\n    if not isinstance(value, str):\n        raise TypeError(\"value must be a string\")\n\n    normalized = unicodedata.normalize(\"NFKC\", value).strip().casefold()\n    parts = []\n    current = []\n\n    for character in normalized:\n        if character.isalnum():\n            current.append(character)\n        elif current:\n            parts.append(\"\".join(current))\n            current = []\n\n    if current:\n        parts.append(\"\".join(current))\n\n    result = \"-\".join(parts)\n    if not result:\n        raise ValueError(\"normalized key must not be empty\")\n    return result\n"
+      }
+    },
+    "hard_safe_paths": {
+      "task_id": "hard_safe_paths",
+      "difficulty": "hard",
+      "arm": "always_frontier",
+      "requested_model": "openai/gpt-5.6-sol",
+      "selected_models": [
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "from pathlib import Path\n\n\nclass UnsafePathError(ValueError):\n    pass\n\n\ndef build_extraction_plan(names, destination: Path):\n    raise NotImplementedError\n"
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "safe_paths.py",
+            "bytes": 3192
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators) ... ok\ntest_parent_rejected (test_visible.SafePathTests.test_parent_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators) ... ok\ntest_parent_rejected (test_visible.SafePathTests.test_parent_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_safe_paths/hidden_tests'\n",
+      "cost": 0.0422823,
+      "all_costs_measured": true,
+      "edited": {
+        "safe_paths.py": "import ntpath\nfrom pathlib import Path\n\n\nclass UnsafePathError(ValueError):\n    pass\n\n\ndef build_extraction_plan(names, destination: Path):\n    \"\"\"Return a filesystem-free plan for extracting file members.\n\n    Member names are interpreted using archive-style, platform-independent\n    rules: both kinds of slash are separators, while the returned paths use\n    the semantics of :class:`pathlib.Path` on the current platform.\n    \"\"\"\n    destination = Path(destination)\n    plan = []\n\n    # These component tuples are case-folded.  ``required_directories`` also\n    # lets us reject a file whose path would have to be a directory for a\n    # different planned file (for example, \"a\" together with \"a/b\").\n    file_targets = set()\n    required_directories = set()\n\n    for original_name in names:\n        if not isinstance(original_name, str) or not original_name:\n            raise UnsafePathError(\"archive member name must be a non-empty string\")\n        if \"\\x00\" in original_name:\n            raise UnsafePathError(\"archive member name contains a NUL byte\")\n        if original_name[0] in \"/\\\\\":\n            raise UnsafePathError(\"absolute and UNC member paths are not allowed\")\n        if original_name[-1] in \"/\\\\\":\n            raise UnsafePathError(\"directory entries are not allowed\")\n\n        # splitdrive is from ntpath deliberately: drive paths must be rejected\n        # even when this code is running on a non-Windows host.\n        if ntpath.splitdrive(original_name)[0]:\n            raise UnsafePathError(\"drive-qualified member paths are not allowed\")\n\n        components = []\n        for component in original_name.replace(\"\\\\\", \"/\").split(\"/\"):\n            if not component or component == \".\":\n                continue\n            if component == \"..\":\n                raise UnsafePathError(\"parent path components are not allowed\")\n            components.append(component)\n\n        if not components:\n            # Names made solely from dots and separators denote directories,\n            # not files, even if they did not have a trailing separator.\n            raise UnsafePathError(\"member path does not name a file\")\n\n        normalized_name = \"/\".join(components)\n        if ntpath.splitdrive(normalized_name)[0]:\n            raise UnsafePathError(\"drive-qualified member paths are not allowed\")\n\n        target = destination.joinpath(*components)\n        try:\n            relative = target.relative_to(destination)\n        except ValueError as exc:\n            raise UnsafePathError(\"member target escapes the destination\") from exc\n        if relative == Path(\".\"):\n            raise UnsafePathError(\"member path does not name a file\")\n\n        key = tuple(component.casefold() for component in components)\n        prefixes = {key[:index] for index in range(1, len(key))}\n        if key in file_targets or key in required_directories:\n            raise UnsafePathError(\"archive members have colliding targets\")\n        if prefixes & file_targets:\n            raise UnsafePathError(\"a file target conflicts with another member\")\n\n        file_targets.add(key)\n        required_directories.update(prefixes)\n        plan.append((original_name, target))\n\n    return plan\n"
+      }
+    },
+    "hard_ttl_cache": {
+      "task_id": "hard_ttl_cache",
+      "difficulty": "hard",
+      "arm": "always_frontier",
+      "requested_model": "openai/gpt-5.6-sol",
+      "selected_models": [
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol"
+      ],
+      "turns": 6,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "tests/test_visible.py",
+            "ttl_cache.py"
+          ]
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "ttl_cache.py",
+            "bytes": 2969
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ok\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.075s\n\nOK\n"
+          }
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "ttl_cache.py",
+            "bytes": 3144
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ok\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.058s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ok\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.057s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_ttl_cache/hidden_tests'\n",
+      "cost": 0.0607493,
+      "all_costs_measured": true,
+      "edited": {
+        "ttl_cache.py": "import math\nimport threading\nimport time\n\n\nclass _Flight:\n    \"\"\"The outcome of one computation, shared by all of its waiters.\"\"\"\n\n    __slots__ = (\"event\", \"generation\", \"result\", \"error\")\n\n    def __init__(self, generation):\n        self.event = threading.Event()\n        self.generation = generation\n        self.result = None\n        self.error = None\n\n\nclass TTLCache:\n    def __init__(self, ttl_seconds, clock=time.monotonic):\n        # Use math.isfinite before converting so non-numeric values such as\n        # numeric strings are not silently accepted.\n        try:\n            finite = math.isfinite(ttl_seconds)\n        except (TypeError, ValueError, OverflowError) as exc:\n            raise TypeError(\"ttl_seconds must be a finite non-negative number\") from exc\n        if not finite or ttl_seconds < 0:\n            raise ValueError(\"ttl_seconds must be a finite non-negative number\")\n\n        self._ttl = float(ttl_seconds)\n        self._clock = clock\n        self._lock = threading.Lock()\n        self._values = {}\n        self._flights = {}\n        self._generation = 0\n\n    def get_or_compute(self, key, factory):\n        with self._lock:\n            entry = self._values.get(key)\n            if entry is not None:\n                value, expires_at = entry\n                if self._clock() < expires_at:\n                    return value\n                del self._values[key]\n\n            flight = self._flights.get(key)\n            if flight is None:\n                flight = _Flight(self._generation)\n                self._flights[key] = flight\n                compute = True\n            else:\n                compute = False\n\n        if not compute:\n            flight.event.wait()\n            if flight.error is not None:\n                raise flight.error\n            return flight.result\n\n        try:\n            result = factory()\n            # Read the clock after the factory returns: the lifetime starts at\n            # completion, rather than when potentially slow work began.\n            completed_at = self._clock()\n            expires_at = completed_at + self._ttl\n        except BaseException as error:\n            # Clock failures are handled like factory failures as well, so no\n            # waiter can be stranded on an unfinished flight.\n            with self._lock:\n                flight.error = error\n                if self._flights.get(key) is flight:\n                    del self._flights[key]\n                flight.event.set()\n            raise\n\n        with self._lock:\n            flight.result = result\n            # A clear concurrent with this computation must not allow work\n            # started before clear() to repopulate the stored cache. The\n            # flight itself remains valid for all callers already sharing it.\n            if flight.generation == self._generation:\n                self._values[key] = (result, expires_at)\n            if self._flights.get(key) is flight:\n                del self._flights[key]\n            flight.event.set()\n\n        return result\n\n    def clear(self):\n        with self._lock:\n            self._values.clear()\n            self._generation += 1\n"
+      }
+    },
+    "medium_allocation": {
+      "task_id": "medium_allocation",
+      "difficulty": "medium",
+      "arm": "always_frontier",
+      "requested_model": "openai/gpt-5.6-sol",
+      "selected_models": [
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol"
+      ],
+      "turns": 3,
+      "tool_events": [
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "allocation.py",
+            "bytes": 2256
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_largest_remainder (test_visible.AllocationTests.test_largest_remainder) ... ok\ntest_zero_total (test_visible.AllocationTests.test_zero_total) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.005s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_largest_remainder (test_visible.AllocationTests.test_largest_remainder) ... ok\ntest_zero_total (test_visible.AllocationTests.test_zero_total) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_allocation/hidden_tests'\n",
+      "cost": 0.0202542,
+      "all_costs_measured": true,
+      "edited": {
+        "allocation.py": "from collections.abc import Mapping\nfrom decimal import Decimal, DecimalException\nfrom fractions import Fraction\n\n\ndef allocate(total_cents, weights):\n    \"\"\"Allocate *total_cents* proportionally using largest remainders.\n\n    Weight conversion is performed by :class:`Decimal`, and all subsequent\n    calculations use exact integer/rational arithmetic.\n    \"\"\"\n    if isinstance(total_cents, bool) or not isinstance(total_cents, int):\n        raise TypeError(\"total_cents must be an integer\")\n    if total_cents < 0:\n        raise ValueError(\"total_cents must be non-negative\")\n    if not isinstance(weights, Mapping):\n        raise TypeError(\"weights must be a mapping\")\n    if not weights:\n        raise TypeError(\"weights must not be empty\")\n\n    converted = {}\n    for key, value in weights.items():\n        if not isinstance(key, str) or not key:\n            raise TypeError(\"weight keys must be non-empty strings\")\n        try:\n            weight = Decimal(value)\n        except TypeError:\n            raise TypeError(\"weight values must be accepted by Decimal\") from None\n        except (DecimalException, ValueError):\n            raise ValueError(\"weight values must be valid numbers\") from None\n\n        if not weight.is_finite():\n            raise ValueError(\"weights must be finite\")\n        if weight < 0:\n            raise ValueError(\"weights must be non-negative\")\n        converted[key] = Fraction(weight)\n\n    total_weight = sum(converted.values(), Fraction(0))\n    if total_weight <= 0:\n        raise ValueError(\"at least one weight must be positive\")\n\n    keys = sorted(converted)\n    result = {}\n    remainders = []\n    allocated = 0\n    for key in keys:\n        exact_share = total_cents * converted[key] / total_weight\n        floor_share = exact_share.numerator // exact_share.denominator\n        result[key] = floor_share\n        allocated += floor_share\n        remainders.append((exact_share - floor_share, key))\n\n    # Sorting is stable and keys are already lexical, so equal remainders keep\n    # lexical order.  At most len(weights) - 1 cents remain after flooring.\n    remainders.sort(key=lambda item: item[0], reverse=True)\n    for _, key in remainders[: total_cents - allocated]:\n        result[key] += 1\n\n    return result\n"
+      }
+    },
+    "medium_dependencies": {
+      "task_id": "medium_dependencies",
+      "difficulty": "medium",
+      "arm": "always_frontier",
+      "requested_model": "openai/gpt-5.6-sol",
+      "selected_models": [
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "dependencies.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "dependencies.py",
+            "bytes": 2543
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ok\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ok\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_dependencies/hidden_tests'\n",
+      "cost": 0.0231742,
+      "all_costs_measured": true,
+      "edited": {
+        "dependencies.py": "from collections.abc import Mapping\nimport heapq\n\n\nclass DependencyError(ValueError):\n    pass\n\n\ndef build_order(dependencies):\n    \"\"\"Return a deterministic topological ordering of *dependencies*.\n\n    Each mapping key is a task and its value is an iterable containing the\n    tasks that must precede it.  When more than one task is ready, the\n    lexicographically smallest one is selected.\n    \"\"\"\n    if not isinstance(dependencies, Mapping):\n        raise DependencyError(\"dependencies must be a mapping\")\n\n    # Snapshot the keys up front so that validation and graph construction do\n    # not alter the caller's mapping or any dependency collections.\n    task_names = list(dependencies.keys())\n    for name in task_names:\n        if not isinstance(name, str) or not name:\n            raise DependencyError(\"task names must be non-empty strings\")\n\n    tasks = set(task_names)\n    prerequisites = {}\n\n    for task in task_names:\n        entries = dependencies[task]\n        if isinstance(entries, (str, bytes, bytearray, memoryview)):\n            raise DependencyError(\"dependencies for a task must not be string-like\")\n\n        try:\n            entries = iter(entries)\n        except TypeError as exc:\n            raise DependencyError(\"dependencies for a task must be iterable\") from exc\n\n        unique = set()\n        for dependency in entries:\n            if not isinstance(dependency, str) or not dependency:\n                raise DependencyError(\"dependency names must be non-empty strings\")\n            if dependency == task:\n                raise DependencyError(\"a task cannot depend on itself\")\n            if dependency not in tasks:\n                raise DependencyError(\"dependency refers to a missing task\")\n            unique.add(dependency)\n        prerequisites[task] = unique\n\n    dependents = {task: [] for task in task_names}\n    indegree = {}\n    for task, required in prerequisites.items():\n        indegree[task] = len(required)\n        for dependency in required:\n            dependents[dependency].append(task)\n\n    available = [task for task in task_names if indegree[task] == 0]\n    heapq.heapify(available)\n    order = []\n\n    while available:\n        task = heapq.heappop(available)\n        order.append(task)\n        for dependent in dependents[task]:\n            indegree[dependent] -= 1\n            if indegree[dependent] == 0:\n                heapq.heappush(available, dependent)\n\n    if len(order) != len(task_names):\n        raise DependencyError(\"dependency graph contains a cycle\")\n\n    return order\n"
+      }
+    }
+  },
+  "auto_constrained": {
+    "easy_intervals": {
+      "task_id": "easy_intervals",
+      "difficulty": "easy",
+      "arm": "auto_constrained",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "intervals.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "def collapse(values):\n    values = list(values)\n    if not values:\n        return \"\"\n    return \",\".join(str(value) for value in values)\n"
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "intervals.py",
+            "bytes": 1025
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": true,
+      "visible_output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "test_generator (test_hidden.HiddenCollapseTests.test_generator) ... ok\ntest_input_not_mutated (test_hidden.HiddenCollapseTests.test_input_not_mutated) ... ok\ntest_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) ... ok\ntest_negative_and_duplicates (test_hidden.HiddenCollapseTests.test_negative_and_duplicates) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.001s\n\nOK\n",
+      "cost": 0.00139655,
+      "all_costs_measured": true,
+      "edited": {
+        "intervals.py": "def collapse(values):\n    \"\"\"Collapse an iterable of integers into a compact comma-separated string.\n\n    Consecutive values are rendered as \"start-end\"; isolated values are\n    rendered bare. Input is not mutated. Booleans and non-integers raise\n    TypeError. Empty input yields \"\".\n    \"\"\"\n    items = list(values)\n\n    for item in items:\n        if isinstance(item, bool) or not isinstance(item, int):\n            raise TypeError(\n                \"collapse() expects integers, got {}: {!r}\".format(\n                    type(item).__name__, item\n                )\n            )\n\n    ordered = sorted(set(items))\n    if not ordered:\n        return \"\"\n\n    parts = []\n    start = prev = ordered[0]\n    for value in ordered[1:]:\n        if value == prev + 1:\n            prev = value\n        else:\n            parts.append(str(start) if start == prev else \"{}-{}\".format(start, prev))\n            start = prev = value\n    parts.append(str(start) if start == prev else \"{}-{}\".format(start, prev))\n\n    return \",\".join(parts)\n"
+      }
+    },
+    "easy_normalize": {
+      "task_id": "easy_normalize",
+      "difficulty": "easy",
+      "arm": "auto_constrained",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "key_normalizer.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unicodedata\n\n\ndef normalize_key(value: str) -> str:\n    \"\"\"Return a stable identifier for a user supplied label.\"\"\"\n    raise NotImplementedError\n"
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "key_normalizer.py",
+            "bytes": 1103
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": true,
+      "visible_output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "test_non_ascii_letters_are_preserved (test_hidden.HiddenNormalizeKeyTests.test_non_ascii_letters_are_preserved) ... ok\ntest_non_string_rejected (test_hidden.HiddenNormalizeKeyTests.test_non_string_rejected) ... ok\ntest_runs_collapse (test_hidden.HiddenNormalizeKeyTests.test_runs_collapse) ... ok\ntest_unicode_nfkc_and_casefold (test_hidden.HiddenNormalizeKeyTests.test_unicode_nfkc_and_casefold) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.001s\n\nOK\n",
+      "cost": 0.00212583,
+      "all_costs_measured": true,
+      "edited": {
+        "key_normalizer.py": "import unicodedata\n\n\ndef normalize_key(value: str) -> str:\n    \"\"\"Return a stable identifier for a user supplied label.\n\n    The value must be a string (a ``TypeError`` is raised otherwise).  It is\n    normalized with Unicode NFKC, surrounding whitespace is stripped, it is\n    casefolded, and every maximal run of non-alphanumeric characters (Unicode\n    letters and digits count as alphanumeric) is collapsed into a single\n    hyphen.  Leading and trailing hyphens are removed; if nothing remains, a\n    ``ValueError`` is raised.\n    \"\"\"\n    if not isinstance(value, str):\n        raise TypeError(\"value must be a string\")\n\n    normalized = unicodedata.normalize(\"NFKC\", value).strip().casefold()\n\n    parts = []\n    pending_hyphen = False\n    for char in normalized:\n        if char.isalnum():\n            parts.append(char)\n            pending_hyphen = False\n        elif not pending_hyphen:\n            parts.append(\"-\")\n            pending_hyphen = True\n\n    key = \"\".join(parts).strip(\"-\")\n    if not key:\n        raise ValueError(\"value must contain at least one letter or digit\")\n    return key"
+      }
+    },
+    "hard_safe_paths": {
+      "task_id": "hard_safe_paths",
+      "difficulty": "hard",
+      "arm": "auto_constrained",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 2,
+      "tool_events": [
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "safe_paths.py",
+            "bytes": 4345
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators) ... ok\ntest_parent_rejected (test_visible.SafePathTests.test_parent_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.038s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_safe_paths/hidden_tests'\n",
+      "cost": 0.0028974499999999998,
+      "all_costs_measured": true,
+      "edited": {
+        "safe_paths.py": "from pathlib import Path\n\n\nclass UnsafePathError(ValueError):\n    pass\n\n\n_SEPARATORS = (\"/\", \"\\\\\")\n\n\ndef _is_separator(char: str) -> bool:\n    return char in _SEPARATORS\n\n\ndef _is_drive_root_prefix(rest: str, index: int) -> bool:\n    \"\"\"Detect a drive-qualified prefix like ``C:`` at position ``index``.\"\"\"\n    return index + 1 < len(rest) and rest[index + 1] == \":\"\n\n\ndef build_extraction_plan(names, destination: Path):\n    plan = []\n    seen = {}\n\n    if not isinstance(destination, Path):\n        destination = Path(destination)\n\n    for name in names:\n        if not isinstance(name, str):\n            raise UnsafePathError(\"archive member name must be a string\")\n        if name == \"\":\n            raise UnsafePathError(\"archive member name must not be empty\")\n        if \"\\x00\" in name:\n            raise UnsafePathError(\"archive member name must not contain NUL\")\n        if _is_separator(name[-1]):\n            raise UnsafePathError(\"archive member name must not end with a separator\")\n\n        # Absolute paths, UNC paths and drive-qualified paths.\n        if name.startswith(_SEPARATORS):\n            raise UnsafePathError(\"absolute paths are not allowed\")\n        if len(name) >= 2 and name[1] == \":\" and name[0].isalpha():\n            raise UnsafePathError(\"drive-qualified paths are not allowed\")\n\n        # Windows reserved device names (treated as unsafe at the root of a member).\n        first = name\n        for sep in _SEPARATORS:\n            first = first.split(sep, 1)[0]\n        stem = first.split(\".\", 1)[0].upper()\n        if stem in {\"CON\", \"PRN\", \"AUX\", \"NUL\"} or stem in {\n            \"COM1\", \"COM2\", \"COM3\", \"COM4\", \"COM5\", \"COM6\", \"COM7\", \"COM8\", \"COM9\",\n            \"LPT1\", \"LPT2\", \"LPT3\", \"LPT4\", \"LPT5\", \"LPT6\", \"LPT7\", \"LPT8\", \"LPT9\",\n        }:\n            raise UnsafePathError(\"reserved device names are not allowed\")\n\n        # Split into components on both separator styles, collapsing repeats\n        # and dropping '.' components.\n        parts = []\n        current = []\n        for char in name:\n            if _is_separator(char):\n                if current:\n                    parts.append(\"\".join(current))\n                    current = []\n            else:\n                current.append(char)\n        if current:\n            parts.append(\"\".join(current))\n\n        for part in parts:\n            if part == \".\":\n                continue\n            if part == \"..\":\n                raise UnsafePathError(\"'..' components are not allowed\")\n\n        # Lexical containment check against the destination.\n        try:\n            target = destination.joinpath(*parts)\n        except Exception as exc:  # pragma: no cover - defensive\n            raise UnsafePathError(\"invalid path\") from exc\n        if target != Path(target.anchor or \".\").joinpath(*target.parts[1:] if target.anchor else target.parts):\n            pass  # keep simple containment below\n        resolved_root = Path(destination.anchor or \".\")\n        try:\n            relative = target.relative_to(destination)\n        except ValueError as exc:\n            raise UnsafePathError(\"target escapes destination\") from exc\n        if not relative.parts and parts:\n            raise UnsafePathError(\"target escapes destination\")\n        # Guard against destination-relative tricks: every part must be a plain name.\n        for part in parts:\n            if part in (\"\", \".\", \"..\"):\n                raise UnsafePathError(\"invalid path component\")\n            if _is_separator(part[0]):\n                raise UnsafePathError(\"invalid path component\")\n\n        plan.append((name, target))\n\n    # Case-insensitive collision detection, including normalization collisions.\n    normalized_seen = {}\n    for name, target in plan:\n        key = _collision_key(target)\n        if key in normalized_seen:\n            raise UnsafePathError(\n                f\"collision between {normalized_seen[key]!r} and {name!r}\"\n            )\n        normalized_seen[key] = name\n    return plan\n\n\ndef _collision_key(path: Path) -> str:\n    \"\"\"Case-insensitive, normalization-insensitive key for a target path.\"\"\"\n    text = str(path)\n    lowered = text.lower()\n    # NFC/NFD-insensitive comparison.\n    try:\n        import unicodedata\n\n        lowered = unicodedata.normalize(\"NFC\", lowered)\n    except Exception:  # pragma: no cover\n        pass\n    return lowered\n"
+      }
+    },
+    "hard_ttl_cache": {
+      "task_id": "hard_ttl_cache",
+      "difficulty": "hard",
+      "arm": "auto_constrained",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 3,
+      "tool_events": [
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "ttl_cache.py",
+            "bytes": 3950
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ok\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.058s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ok\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.058s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_ttl_cache/hidden_tests'\n",
+      "cost": 0.00164162,
+      "all_costs_measured": true,
+      "edited": {
+        "ttl_cache.py": "\"\"\"A small thread-safe TTL cache with single-flight computation.\"\"\"\n\nimport math\nimport threading\nimport time\n\n\nclass _Flight:\n    \"\"\"Coordination state for one in-flight factory execution.\"\"\"\n\n    __slots__ = (\"event\", \"value\", \"error\")\n\n    def __init__(self):\n        self.event = threading.Event()\n        self.value = None\n        self.error = None\n\n\nclass TTLCache:\n    \"\"\"Thread-safe cache with per-key TTL and single-flight factories.\n\n    Concurrent calls for the same key share one factory execution; calls\n    for different keys never block each other.  Values are cached from the\n    moment the factory completes.  Exceptions are never cached, but are\n    propagated to all callers that joined the same in-flight computation,\n    and a later call may retry the factory.\n    \"\"\"\n\n    def __init__(self, ttl_seconds, clock=time.monotonic):\n        if isinstance(ttl_seconds, bool) or not isinstance(\n            ttl_seconds, (int, float)\n        ):\n            raise TypeError(\"ttl_seconds must be a real number\")\n        if math.isnan(ttl_seconds) or math.isinf(ttl_seconds):\n            raise ValueError(\"ttl_seconds must be finite\")\n        if ttl_seconds < 0:\n            raise ValueError(\"ttl_seconds must be non-negative\")\n        self._ttl = float(ttl_seconds)\n        if not callable(clock):\n            raise TypeError(\"clock must be callable\")\n        self._clock = clock\n        self._lock = threading.Lock()\n        # key -> (value, expires_at)\n        self._entries = {}\n        # key -> _Flight for currently executing factories\n        self._flights = {}\n        # Bumped by clear(); lets in-flight computations detect invalidation.\n        self._generation = 0\n\n    def get_or_compute(self, key, factory):\n        \"\"\"Return the cached value for *key*, computing it if needed.\n\n        Only one thread runs *factory* per key at a time; concurrent\n        callers for the same key wait and receive the same result (or the\n        same exception).\n        \"\"\"\n        while True:\n            with self._lock:\n                now = self._clock()\n                entry = self._entries.get(key)\n                if entry is not None and now < entry[1]:\n                    return entry[0]\n                flight = self._flights.get(key)\n                if flight is None:\n                    flight = _Flight()\n                    self._flights[key] = flight\n                    generation = self._generation\n                    leader = True\n                else:\n                    leader = False\n\n            if not leader:\n                flight.event.wait()\n                if flight.error is not None:\n                    raise flight.error\n                return flight.value\n\n            try:\n                value = factory()\n            except BaseException as exc:\n                with self._lock:\n                    flight.error = exc\n                    flight.event.set()\n                    if self._flights.get(key) is flight:\n                        del self._flights[key]\n                raise\n\n            with self._lock:\n                flight.value = value\n                flight.event.set()\n                if self._flights.get(key) is flight:\n                    del self._flights[key]\n                # Expiry is measured from factory completion; only cache if\n                # the cache has not been cleared in the meantime.\n                if self._ttl > 0 and self._generation == generation:\n                    self._entries[key] = (value, self._clock() + self._ttl)\n            return value\n\n    def clear(self):\n        \"\"\"Invalidate all stored values.\n\n        In-flight coordination is left intact: current waiters still\n        receive the shared result of the running factory, but the value is\n        not (re)stored as a cache entry from a computation that overlapped\n        the clear.\n        \"\"\"\n        with self._lock:\n            self._entries.clear()\n            self._generation += 1\n"
+      }
+    },
+    "medium_allocation": {
+      "task_id": "medium_allocation",
+      "difficulty": "medium",
+      "arm": "auto_constrained",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 1,
+      "tool_events": [],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_largest_remainder (test_visible.AllocationTests.test_largest_remainder) ... ERROR\ntest_zero_total (test_visible.AllocationTests.test_zero_total) ... ERROR\n\n======================================================================\nERROR: test_largest_remainder (test_visible.AllocationTests.test_largest_remainder)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 8, in test_largest_remainder\n    self.assertEqual(allocate(10, {\"a\": 1, \"b\": 1, \"c\": 1}), {\"a\": 4, \"b\": 3, \"c\": 3})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_zero_total (test_visible.AllocationTests.test_zero_total)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_zero_total\n    self.assertEqual(allocate(0, {\"a\": 2, \"b\": 1}), {\"a\": 0, \"b\": 0})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.038s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_allocation/hidden_tests'\n",
+      "cost": 0.00214685,
+      "all_costs_measured": true,
+      "edited": {
+        "allocation.py": "from decimal import Decimal\n\n\ndef allocate(total_cents, weights):\n    raise NotImplementedError\n"
+      }
+    },
+    "medium_dependencies": {
+      "task_id": "medium_dependencies",
+      "difficulty": "medium",
+      "arm": "auto_constrained",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 5,
+      "tool_events": [
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "dependencies.py",
+            "bytes": 2512
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ok\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.004s\n\nOK\n"
+          }
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "dependencies.py",
+            "bytes": 2719
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ok\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ok\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_dependencies/hidden_tests'\n",
+      "cost": 0.00161639,
+      "all_costs_measured": true,
+      "edited": {
+        "dependencies.py": "import heapq\n\n\nclass DependencyError(ValueError):\n    pass\n\n\ndef build_order(dependencies):\n    \"\"\"Return a deterministic topological order of tasks.\n\n    dependencies: mapping from task name (str) to an iterable of task names\n    that task depends on. Every dependency must itself be a key of the\n    mapping. Ties are broken by always choosing the lexically smallest\n    currently available task. Raises DependencyError for invalid input or\n    cyclic dependencies. The input is not mutated.\n    \"\"\"\n    if not hasattr(dependencies, \"items\"):\n        raise DependencyError(\"dependencies must be a mapping\")\n\n    try:\n        items = list(dependencies.items())\n    except Exception:\n        raise DependencyError(\"dependencies must be a mapping\")\n\n    graph = {}\n    for task, deps in items:\n        if not isinstance(task, str) or not task:\n            raise DependencyError(\"task names must be non-empty strings\")\n        if isinstance(deps, (str, bytes, bytearray)):\n            raise DependencyError(\n                \"dependencies must be an iterable of task names, not a string\")\n        try:\n            dep_list = list(deps)\n        except TypeError:\n            raise DependencyError(\n                \"dependencies must be an iterable of task names\")\n        graph[task] = dep_list\n\n    for task, dep_list in graph.items():\n        for dep in dep_list:\n            if not isinstance(dep, str) or not dep:\n                raise DependencyError(\n                    \"dependency names must be non-empty strings\")\n            if dep not in graph:\n                raise DependencyError(\n                    \"unknown task in dependencies: {!r}\".format(dep))\n\n    remaining_deps = {}\n    dependents = {task: set() for task in graph}\n    for task, dep_list in graph.items():\n        unique_deps = set(dep_list)\n        if task in unique_deps:\n            raise DependencyError(\n                \"task cannot depend on itself: {!r}\".format(task))\n        remaining_deps[task] = len(unique_deps)\n        for dep in unique_deps:\n            dependents[dep].add(task)\n\n    available = [\n        task for task, count in remaining_deps.items() if count == 0]\n    heapq.heapify(available)\n\n    order = []\n    while available:\n        task = heapq.heappop(available)\n        order.append(task)\n        for dependent in dependents[task]:\n            remaining_deps[dependent] -= 1\n            if remaining_deps[dependent] == 0:\n                heapq.heappush(available, dependent)\n\n    if len(order) != len(graph):\n        unresolved = sorted(set(graph) - set(order))\n        raise DependencyError(\n            \"cyclic dependency involving: {}\".format(\n                \", \".join(repr(t) for t in unresolved)))\n\n    return order\n"
+      }
+    }
+  },
+  "auto_unrestricted": {
+    "easy_intervals": {
+      "task_id": "easy_intervals",
+      "difficulty": "easy",
+      "arm": "auto_unrestricted",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "intervals.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "def collapse(values):\n    values = list(values)\n    if not values:\n        return \"\"\n    return \",\".join(str(value) for value in values)\n"
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "intervals.py",
+            "bytes": 1256
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": true,
+      "visible_output": "test_empty (test_visible.CollapseTests.test_empty) ... ok\ntest_ranges (test_visible.CollapseTests.test_ranges) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "test_generator (test_hidden.HiddenCollapseTests.test_generator) ... ok\ntest_input_not_mutated (test_hidden.HiddenCollapseTests.test_input_not_mutated) ... ok\ntest_invalid_values (test_hidden.HiddenCollapseTests.test_invalid_values) ... ok\ntest_negative_and_duplicates (test_hidden.HiddenCollapseTests.test_negative_and_duplicates) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.001s\n\nOK\n",
+      "cost": 0.00174405,
+      "all_costs_measured": true,
+      "edited": {
+        "intervals.py": "def collapse(values):\n    \"\"\"Collapse an iterable of integers into a comma-joined range string.\n\n    Accepts any iterable of integers. Duplicates are removed, values are\n    sorted ascending, and consecutive runs are rendered as \"start-end\"\n    while isolated values stay bare (e.g. \"-3--1,1-2,4\"). Returns \"\" for\n    empty input. Raises TypeError for booleans or non-integers. The input\n    is never mutated.\n    \"\"\"\n    try:\n        items = list(values)\n    except TypeError:\n        raise TypeError(\"collapse() expects an iterable of integers\")\n\n    for item in items:\n        if isinstance(item, bool) or not isinstance(item, int):\n            raise TypeError(\n                \"collapse() expects only integers, got %s\" % type(item).__name__\n            )\n\n    unique = sorted(set(items))\n    if not unique:\n        return \"\"\n\n    def render(start, end):\n        if start == end:\n            return str(start)\n        return \"%d-%d\" % (start, end)\n\n    parts = []\n    run_start = prev = unique[0]\n    for value in unique[1:]:\n        if value == prev + 1:\n            prev = value\n        else:\n            parts.append(render(run_start, prev))\n            run_start = prev = value\n    parts.append(render(run_start, prev))\n\n    return \",\".join(parts)\n"
+      }
+    },
+    "easy_normalize": {
+      "task_id": "easy_normalize",
+      "difficulty": "easy",
+      "arm": "auto_unrestricted",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "key_normalizer.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "read_file",
+          "ok": true,
+          "result": "import unicodedata\n\n\ndef normalize_key(value: str) -> str:\n    \"\"\"Return a stable identifier for a user supplied label.\"\"\"\n    raise NotImplementedError\n"
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "key_normalizer.py",
+            "bytes": 1126
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": true,
+      "visible_output": "test_ascii_and_punctuation (test_visible.NormalizeKeyTests.test_ascii_and_punctuation) ... ok\ntest_empty_rejected (test_visible.NormalizeKeyTests.test_empty_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+      "hidden_output": "test_non_ascii_letters_are_preserved (test_hidden.HiddenNormalizeKeyTests.test_non_ascii_letters_are_preserved) ... ok\ntest_non_string_rejected (test_hidden.HiddenNormalizeKeyTests.test_non_string_rejected) ... ok\ntest_runs_collapse (test_hidden.HiddenNormalizeKeyTests.test_runs_collapse) ... ok\ntest_unicode_nfkc_and_casefold (test_hidden.HiddenNormalizeKeyTests.test_unicode_nfkc_and_casefold) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.001s\n\nOK\n",
+      "cost": 0.00343955,
+      "all_costs_measured": true,
+      "edited": {
+        "key_normalizer.py": "import unicodedata\n\n\ndef normalize_key(value: str) -> str:\n    \"\"\"Return a stable identifier for a user supplied label.\n\n    The input must be a string. It is normalized with Unicode NFKC,\n    stripped of surrounding whitespace, and casefolded. Every maximal\n    run of non-alphanumeric characters (Unicode letters and digits count\n    as alphanumeric) is replaced by a single hyphen, and leading and\n    trailing hyphens are removed.\n\n    Raises:\n        TypeError: if ``value`` is not a string.\n        ValueError: if the resulting key would be empty.\n    \"\"\"\n    if not isinstance(value, str):\n        raise TypeError(\"normalize_key() requires a string\")\n\n    normalized = unicodedata.normalize(\"NFKC\", value).strip().casefold()\n\n    parts = []\n    pending_hyphen = False\n    for char in normalized:\n        if char.isalnum():\n            parts.append(char)\n            pending_hyphen = False\n        elif not pending_hyphen:\n            parts.append(\"-\")\n            pending_hyphen = True\n\n    key = \"\".join(parts).strip(\"-\")\n    if not key:\n        raise ValueError(\"normalize_key() produced an empty key\")\n    return key"
+      }
+    },
+    "hard_safe_paths": {
+      "task_id": "hard_safe_paths",
+      "difficulty": "hard",
+      "arm": "auto_unrestricted",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 1,
+      "tool_events": [],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators) ... ERROR\ntest_parent_rejected (test_visible.SafePathTests.test_parent_rejected) ... ERROR\n\n======================================================================\nERROR: test_normalizes_separators (test_visible.SafePathTests.test_normalizes_separators)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 9, in test_normalizes_separators\n    self.assertEqual(build_extraction_plan([\"a//b.txt\", \"c\\\\d.py\"], Path(\"out\")),\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/safe_paths.py\", line 9, in build_extraction_plan\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_parent_rejected (test_visible.SafePathTests.test_parent_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 14, in test_parent_rejected\n    build_extraction_plan([\"a/../secret\"], Path(\"out\"))\n  File \"/workspace/safe_paths.py\", line 9, in build_extraction_plan\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.036s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_safe_paths/hidden_tests'\n",
+      "cost": 0.0021512,
+      "all_costs_measured": true,
+      "edited": {
+        "safe_paths.py": "from pathlib import Path\n\n\nclass UnsafePathError(ValueError):\n    pass\n\n\ndef build_extraction_plan(names, destination: Path):\n    raise NotImplementedError\n"
+      }
+    },
+    "hard_ttl_cache": {
+      "task_id": "hard_ttl_cache",
+      "difficulty": "hard",
+      "arm": "auto_unrestricted",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "ttl_cache.py",
+            "bytes": 3632
+          }
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "ttl_cache.py",
+            "bytes": 3589
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ok\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.061s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_cached_until_expired (test_visible.TTLCacheTests.test_cached_until_expired) ... ok\ntest_single_flight (test_visible.TTLCacheTests.test_single_flight) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.061s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/hard_ttl_cache/hidden_tests'\n",
+      "cost": 0.00309985,
+      "all_costs_measured": true,
+      "edited": {
+        "ttl_cache.py": "import math\nimport threading\nimport time\n\n\nclass _Flight:\n    \"\"\"Coordination state for a single in-flight factory execution.\"\"\"\n\n    __slots__ = (\"event\", \"value\", \"error\")\n\n    def __init__(self):\n        self.event = threading.Event()\n        self.value = None\n        self.error = None\n\n\nclass TTLCache:\n    \"\"\"A thread-safe cache with per-key single-flight TTL expiry.\n\n    - Cached entries expire ``ttl_seconds`` after the factory completes.\n    - For an expired/missing key, exactly one thread runs the factory while\n      concurrent callers for the same key block until it finishes and then\n      receive the same result.\n    - Successful values (including ``None``) are cached; exceptions are not\n      cached but are propagated to all current waiters, and a later call\n      may retry the factory.\n    - A zero TTL still shares an in-flight result with concurrent waiters,\n      but no value is stored, so a later call recomputes.\n    \"\"\"\n\n    def __init__(self, ttl_seconds, clock=time.monotonic):\n        if isinstance(ttl_seconds, bool) or not isinstance(\n            ttl_seconds, (int, float)\n        ):\n            raise TypeError(\"ttl_seconds must be a real number\")\n        if not math.isfinite(ttl_seconds):\n            raise ValueError(\"ttl_seconds must be finite\")\n        if ttl_seconds < 0:\n            raise ValueError(\"ttl_seconds must be non-negative\")\n        self._ttl = float(ttl_seconds)\n        self._clock = clock\n        self._lock = threading.Lock()\n        # key -> (value, expires_at)\n        self._entries = {}\n        # key -> _Flight for the currently running factory\n        self._flights = {}\n\n    def get_or_compute(self, key, factory):\n        while True:\n            with self._lock:\n                entry = self._entries.get(key)\n                if entry is not None:\n                    value, expires_at = entry\n                    if expires_at > self._clock():\n                        return value\n                    # Expired: drop it.\n                    del self._entries[key]\n\n                flight = self._flights.get(key)\n                leader = flight is None\n                if leader:\n                    # We are the leader: run the factory for this key.\n                    flight = _Flight()\n                    self._flights[key] = flight\n\n            if not leader:\n                # Wait outside the lock so other keys are not blocked.\n                flight.event.wait()\n                if flight.error is not None:\n                    raise flight.error\n                # If the TTL is zero the result was not cached; a waiter\n                # still receives the shared in-flight value.\n                return flight.value\n\n            # Leader path: run the factory without holding the lock.\n            try:\n                value = factory()\n            except BaseException as exc:\n                with self._lock:\n                    flight.error = exc\n                    self._flights.pop(key, None)\n                    flight.event.set()\n                raise\n            else:\n                with self._lock:\n                    flight.value = value\n                    self._flights.pop(key, None)\n                    if self._ttl > 0:\n                        # Expiry measured from factory completion.\n                        self._entries[key] = (value, self._clock() + self._ttl)\n                    flight.event.set()\n                return value\n\n    def clear(self):\n        \"\"\"Invalidate all stored values without disrupting in-flight work.\"\"\"\n        with self._lock:\n            self._entries.clear()\n"
+      }
+    },
+    "medium_allocation": {
+      "task_id": "medium_allocation",
+      "difficulty": "medium",
+      "arm": "auto_unrestricted",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 1,
+      "tool_events": [],
+      "visible_pass": false,
+      "hidden_pass": false,
+      "visible_output": "test_largest_remainder (test_visible.AllocationTests.test_largest_remainder) ... ERROR\ntest_zero_total (test_visible.AllocationTests.test_zero_total) ... ERROR\n\n======================================================================\nERROR: test_largest_remainder (test_visible.AllocationTests.test_largest_remainder)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 8, in test_largest_remainder\n    self.assertEqual(allocate(10, {\"a\": 1, \"b\": 1, \"c\": 1}), {\"a\": 4, \"b\": 3, \"c\": 3})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n======================================================================\nERROR: test_zero_total (test_visible.AllocationTests.test_zero_total)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/tests/test_visible.py\", line 11, in test_zero_total\n    self.assertEqual(allocate(0, {\"a\": 2, \"b\": 1}), {\"a\": 0, \"b\": 0})\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/allocation.py\", line 5, in allocate\n    raise NotImplementedError\nNotImplementedError\n\n----------------------------------------------------------------------\nRan 2 tests in 0.031s\n\nFAILED (errors=2)\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_allocation/hidden_tests'\n",
+      "cost": 0.00214685,
+      "all_costs_measured": true,
+      "edited": {
+        "allocation.py": "from decimal import Decimal\n\n\ndef allocate(total_cents, weights):\n    raise NotImplementedError\n"
+      }
+    },
+    "medium_dependencies": {
+      "task_id": "medium_dependencies",
+      "difficulty": "medium",
+      "arm": "auto_unrestricted",
+      "requested_model": "openrouter/auto",
+      "selected_models": [
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash",
+        "z-ai/glm-5.3-flash"
+      ],
+      "turns": 4,
+      "tool_events": [
+        {
+          "tool": "list_files",
+          "ok": true,
+          "result": [
+            "dependencies.py",
+            "tests/test_visible.py"
+          ]
+        },
+        {
+          "tool": "write_file",
+          "ok": true,
+          "result": {
+            "written": "dependencies.py",
+            "bytes": 2607
+          }
+        },
+        {
+          "tool": "run_tests",
+          "ok": true,
+          "result": {
+            "passed": true,
+            "returncode": 0,
+            "output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ok\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.002s\n\nOK\n"
+          }
+        }
+      ],
+      "visible_pass": true,
+      "hidden_pass": false,
+      "visible_output": "test_cycle (test_visible.DependencyTests.test_cycle) ... ok\ntest_deterministic_order (test_visible.DependencyTests.test_deterministic_order) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "hidden_output": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/usr/local/lib/python3.12/unittest/__main__.py\", line 18, in <module>\n    main(module=None)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 104, in __init__\n    self.parseArgs(argv)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 130, in parseArgs\n    self._do_discovery(argv[2:])\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 253, in _do_discovery\n    self.createTests(from_discovery=True, Loader=Loader)\n  File \"/usr/local/lib/python3.12/unittest/main.py\", line 160, in createTests\n    self.test = loader.discover(self.start, self.pattern, self.top)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/unittest/loader.py\", line 308, in discover\n    raise ImportError('Start directory is not importable: %r' % start_dir)\nImportError: Start directory is not importable: 'harness/live_tasks/medium_dependencies/hidden_tests'\n",
+      "cost": 0.0010592,
+      "all_costs_measured": true,
+      "edited": {
+        "dependencies.py": "class DependencyError(ValueError):\n    pass\n\n\ndef build_order(dependencies):\n    \"\"\"Return a deterministic topological order of tasks.\n\n    dependencies: mapping from task name (str) to an iterable of task\n    names that task depends on.\n\n    Uses Kahn's algorithm, always picking the lexically smallest\n    currently available task.\n    \"\"\"\n    if not isinstance(dependencies, dict):\n        # Allow any mapping? Requirement says \"mapping\", be permissive\n        # only for real mappings; a plain dict is the normal case.\n        try:\n            items = list(dependencies.items())\n        except AttributeError:\n            raise DependencyError(\"dependencies must be a mapping\")\n    else:\n        items = list(dependencies.items())\n\n    graph = {}\n    for name, deps in items:\n        if not isinstance(name, str) or not name:\n            raise DependencyError(\"task names must be non-empty strings\")\n        if deps is None:\n            raise DependencyError(\n                \"dependencies for %r must be an iterable of names\" % name)\n        if isinstance(deps, (str, bytes, bytearray)):\n            raise DependencyError(\n                \"dependencies for %r must be an iterable of names, \"\n                \"not a string\" % name)\n        try:\n            dep_list = list(deps)\n        except TypeError:\n            raise DependencyError(\n                \"dependencies for %r must be an iterable of names\" % name)\n        seen = set()\n        unique_deps = []\n        for dep in dep_list:\n            if not isinstance(dep, str) or not dep:\n                raise DependencyError(\n                    \"dependency names must be non-empty strings\")\n            if dep == name:\n                raise DependencyError(\n                    \"task %r cannot depend on itself\" % name)\n            if dep not in seen:\n                seen.add(dep)\n                unique_deps.append(dep)\n        graph[name] = unique_deps\n\n    for name, unique_deps in graph.items():\n        for dep in unique_deps:\n            if dep not in graph:\n                raise DependencyError(\n                    \"task %r depends on unknown task %r\" % (name, dep))\n\n    remaining = {name: set(deps) for name, deps in graph.items()}\n    order = []\n    while remaining:\n        available = sorted(\n            name for name, deps in remaining.items() if not deps)\n        if not available:\n            raise DependencyError(\"dependency cycle detected\")\n        current = available[0]\n        order.append(current)\n        del remaining[current]\n        for deps in remaining.values():\n            deps.discard(current)\n\n    return order\n"
+      }
+    }
+  }
+}

@@ -11,6 +11,7 @@ from jev_router.tiers import TierCandidates, decide_tier
 from router_eval.comparators import mf_score, read_weights
 from router_eval.data import MODELS, load, split, task_for, freeze
 from router_eval.live_tasks import Workspace, load_tasks
+from router_eval.live_runner import _cheapest_passing_tier, _frozen_cap
 from router_eval.metrics import evaluate, paired_interval
 from router_eval.quality import acceptance, inspect_artifact, REQUIRED
 from router_eval.sandbox import DockerTests
@@ -175,6 +176,41 @@ def test_paid_request_cache_is_reused(tmp_path, monkeypatch):
     assert "user_id" not in (tmp_path / "journal").read_text()
 
 
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), -1, True])
+def test_invalid_money_values_are_rejected(tmp_path, value):
+    with pytest.raises(ValueError):
+        JournalClient(tmp_path / "journal", cap=value)
+
+
+def test_over_reservation_remains_blocked_after_restart(tmp_path, monkeypatch):
+    monkeypatch.setenv("OPENROUTER_API_KEY", "test-only")
+
+    class Response:
+        status_code = 200
+
+        def json(self):
+            return {"model": "example", "usage": {"cost": .003}}
+
+    monkeypatch.setattr("requests.post", lambda *args, **kwargs: Response())
+    journal = tmp_path / "journal"
+    with pytest.raises(RuntimeError, match="exceeded reservation"):
+        JournalClient(journal).post("/api/test", {}, "test", .002)
+    with pytest.raises(RuntimeError, match="Unresolved"):
+        JournalClient(journal).post("/api/test", {}, "test", .002)
+
+
+def test_live_metrics_use_observed_cost_and_frozen_cap():
+    fixed = {
+        "economy": {"hidden_pass": True, "cost": .1},
+        "standard": {"hidden_pass": True, "cost": .02},
+        "frontier": {"hidden_pass": False, "cost": .01},
+    }
+    assert _cheapest_passing_tier(fixed) == "standard"
+    assert _frozen_cap({"spend_cap": 2.0}, 2.0) == 2.0
+    with pytest.raises(RuntimeError, match="frozen"):
+        _frozen_cap({"spend_cap": 2.0}, 3.0)
+
+
 def test_docker_output_is_decoded_as_utf8(tmp_path, monkeypatch):
     observed = {}
 
@@ -192,3 +228,16 @@ def test_docker_output_is_decoded_as_utf8(tmp_path, monkeypatch):
     assert observed["encoding"] == "utf-8"
     assert observed["errors"] == "replace"
     assert result.output == "Καλημέρα"
+
+
+def test_docker_timeout_bytes_are_decoded(tmp_path, monkeypatch):
+    def timeout(*args, **kwargs):
+        raise __import__("subprocess").TimeoutExpired(
+            "docker", 20, output=b"partial \xce\xb1", stderr=b"error"
+        )
+
+    monkeypatch.setattr("subprocess.run", timeout)
+    result = DockerTests().run(tmp_path)
+    assert result.returncode == 124
+    assert "partial αerror" in result.output
+    assert result.output.endswith("TIMEOUT")

@@ -1,5 +1,6 @@
 """Single-writer, durable request journal with conservative spend reservation."""
 import json
+import math
 import os
 from pathlib import Path
 import requests
@@ -10,8 +11,14 @@ class JournalClient:
     def __init__(self, path, cap=0.50, timeout=180):
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.cap = cap
+        self.cap = self._amount(cap, "cap")
         self.timeout = timeout
+
+    @staticmethod
+    def _amount(value, name):
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
+            raise ValueError(f"{name} must be a finite non-negative number")
+        return float(value)
 
     def events(self):
         if not self.path.exists():
@@ -31,14 +38,15 @@ class JournalClient:
         return sum(e.get("cost", e["reserve"]) for e in latest.values())
 
     def post(self, endpoint, payload, tag, reserve):
+        reserve = self._amount(reserve, "reserve")
         key = digest({"endpoint": endpoint, "payload": payload, "tag": tag})
         latest = {}
         for event in self.events():
             latest[event["key"]] = event
+        if any(e["status"] in {"pending", "needs_review"} for e in latest.values()):
+            raise RuntimeError("Unresolved request: reconcile the journal before sending more paid calls")
         if key in latest and latest[key]["status"] == "complete":
             return latest[key]["response"]
-        if any(e["status"] == "pending" for e in latest.values()):
-            raise RuntimeError("Unresolved request: reconcile the journal before sending more paid calls")
         if key in latest:
             raise RuntimeError("Previously failed request; inspect error before explicit retry")
         if self.accounted() + reserve > self.cap:
@@ -63,10 +71,12 @@ class JournalClient:
             raise RuntimeError("Provider returned an error; reserved charge retained")
         safe = {k: body[k] for k in ("id", "model", "answers", "choices", "data", "usage", "provider", "openrouter_metadata") if k in body}
         usage = body.get("usage", {})
-        measured = isinstance(usage.get("cost"), (int, float))
-        cost = float(usage["cost"]) if measured else reserve
+        measured = "cost" in usage
+        cost = self._amount(usage["cost"], "provider cost") if measured else reserve
+        if cost > reserve:
+            self.append({**event, "status": "needs_review", "cost": cost,
+                         "cost_measured": measured, "response": safe})
+            raise RuntimeError("Provider cost exceeded reservation; stopped for review")
         self.append({**event, "status": "complete", "cost": cost,
                      "cost_measured": measured, "response": safe})
-        if cost > reserve:
-            raise RuntimeError("Provider cost exceeded reservation; stopped for review")
         return safe

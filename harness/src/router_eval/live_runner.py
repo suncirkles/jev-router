@@ -33,7 +33,25 @@ ARMS = {
 
 
 def _save(path, value):
-    Path(path).write_text(json.dumps(value, indent=2, ensure_ascii=False), encoding="utf-8")
+    path = Path(path)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("w", encoding="utf-8") as stream:
+        stream.write(json.dumps(value, indent=2, ensure_ascii=False))
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def _frozen_cap(config, requested):
+    frozen = float(config["spend_cap"])
+    if float(requested) != frozen:
+        raise RuntimeError(f"Spend cap is frozen at {frozen}; use a new output directory to change it")
+    return frozen
+
+
+def _cheapest_passing_tier(fixed):
+    passing = [tier for tier, result in fixed.items() if result["hidden_pass"]]
+    return min(passing, key=lambda tier: fixed[tier]["cost"]) if passing else None
 
 
 def _model_snapshot():
@@ -112,7 +130,7 @@ def run_live(root, output, cap=2.0):
     expected["tasks"] = {task.task_id: {"difficulty": task.difficulty, "fingerprint": task.fingerprint()} for task in tasks}
     if expected != config:
         raise RuntimeError("Experiment code or task fixtures changed after the live run was frozen")
-    client = JournalClient(output / "requests.jsonl", cap=cap, timeout=240)
+    client = JournalClient(output / "requests.jsonl", cap=_frozen_cap(config, cap), timeout=240)
     tests = DockerTests(config["docker_image"])
     candidates = TierCandidates(TIERS["economy"], TIERS["standard"], TIERS["frontier"])
     decisions_path = output / "decisions.json"
@@ -150,11 +168,13 @@ def run_live(root, output, cap=2.0):
         selected["router_cost"] = classification_cost
         jev_selected[task_id] = selected
         passing = [tier for tier in tier_names if fixed[tier]["hidden_pass"]]
-        cheapest = passing[0] if passing else None
+        cheapest = _cheapest_passing_tier(fixed)
+        lowest_capability = passing[0] if passing else None
         diagnostics[task_id] = {
             "difficulty": next(task.difficulty for task in tasks if task.task_id == task_id),
             "jev_tier": selected_tier,
             "cheapest_passing_tier": cheapest,
+            "lowest_capability_passing_tier": lowest_capability,
             "fixed_passes": {tier: fixed[tier]["hidden_pass"] for tier in tier_names},
             "under_routed": not fixed[selected_tier]["hidden_pass"] and any(
                 fixed[tier]["hidden_pass"] for tier in tier_names[tier_names.index(selected_tier) + 1:]),

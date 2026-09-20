@@ -1,0 +1,284 @@
+{
+  "easy_intervals": {
+    "decision": {
+      "task_id": "easy_intervals",
+      "model": "google/gemini-3.8-flash",
+      "reason": "demand=1; missing=0.120",
+      "input_hash": "52f611d6b980cab0680710ad347f21a602fd1300ab7b6e4d2c9a089fdc3cda8c",
+      "fallback": false
+    },
+    "response": {
+      "id": "gen-dec-1789884977-ZuZ1cit4CSThOhJCRL7E",
+      "model": "typesafe/jev-1.13-20260917",
+      "answers": {
+        "family": {
+          "type": "choice",
+          "choice": "debugging",
+          "probabilities": {
+            "explain": 0,
+            "debugging": 0.95,
+            "refactor": 0,
+            "other": 0,
+            "implementation": 0.05
+          },
+          "confidence": 0.94
+        },
+        "demand": {
+          "type": "choice",
+          "choice": "1",
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.95,
+            "2": 0.02
+          },
+          "confidence": 0.92
+        },
+        "missing": {
+          "type": "noul",
+          "noul": 0.12
+        }
+      },
+      "usage": {
+        "input_tokens": 771,
+        "output_tokens": 111,
+        "cost": 3.2382e-05
+      },
+      "provider": "TypeSafe"
+    }
+  },
+  "easy_normalize": {
+    "decision": {
+      "task_id": "easy_normalize",
+      "model": "google/gemini-3.8-flash",
+      "reason": "demand=1; missing=0.080",
+      "input_hash": "7f28148851bcfafd505fe4ae077d8d0117a0faa3d3053032ddcfb6ed18328ed2",
+      "fallback": false
+    },
+    "response": {
+      "id": "gen-dec-1789885195-GXA12vJSWprxvT69YjnY",
+      "model": "typesafe/jev-1.13-20260917",
+      "answers": {
+        "family": {
+          "type": "choice",
+          "choice": "implementation",
+          "probabilities": {
+            "other": 0,
+            "implementation": 1,
+            "debugging": 0,
+            "refactor": 0,
+            "explain": 0
+          },
+          "confidence": 1
+        },
+        "demand": {
+          "type": "choice",
+          "choice": "1",
+          "probabilities": {
+            "0": 0.06,
+            "1": 0.9400000000000001,
+            "2": 0
+          },
+          "confidence": 0.9
+        },
+        "missing": {
+          "type": "noul",
+          "noul": 0.08
+        }
+      },
+      "usage": {
+        "input_tokens": 788,
+        "output_tokens": 109,
+        "cost": 3.3096e-05
+      },
+      "provider": "TypeSafe"
+    }
+  },
+  "hard_safe_paths": {
+    "decision": {
+      "task_id": "hard_safe_paths",
+      "model": "google/gemini-3.8-flash",
+      "reason": "demand=1; missing=0.260",
+      "input_hash": "cbffd108225ff31a073900c917243d217162ca52f7668534baa7a372271d7294",
+      "fallback": false
+    },
+    "response": {
+      "id": "gen-dec-1789885473-I6s1xBcnrkyIfGLXEn0P",
+      "model": "typesafe/jev-1.13-20260917",
+      "answers": {
+        "family": {
+          "type": "choice",
+          "choice": "implementation",
+          "probabilities": {
+            "other": 0,
+            "debugging": 0,
+            "implementation": 1,
+            "refactor": 0,
+            "explain": 0
+          },
+          "confidence": 1
+        },
+        "demand": {
+          "type": "choice",
+          "choice": "1",
+          "probabilities": {
+            "0": 0,
+            "1": 0.55,
+            "2": 0.45
+          },
+          "confidence": 0.32
+        },
+        "missing": {
+          "type": "noul",
+          "noul": 0.26
+        }
+      },
+      "usage": {
+        "input_tokens": 884,
+        "output_tokens": 109,
+        "cost": 3.7128e-05
+      },
+      "provider": "TypeSafe"
+    }
+  },
+  "hard_ttl_cache": {
+    "decision": {
+      "task_id": "hard_ttl_cache",
+      "model": "openai/gpt-5.6-sol",
+      "reason": "demand=2; missing=0.150",
+      "input_hash": "f42a9cbdf6b254a9c54be1a6e683b935d37456ba2227ded5642a9f15f2318854",
+      "fallback": false
+    },
+    "response": {
+      "id": "gen-dec-1789886364-sw5BoFywz9h6nAPux4pt",
+      "model": "typesafe/jev-1.13-20260917",
+      "answers": {
+        "family": {
+          "type": "choice",
+          "choice": "implementation",
+          "probabilities": {
+            "other": 0,
+            "explain": 0,
+            "implementation": 1,
+            "debugging": 0,
+            "refactor": 0
+          },
+          "confidence": 1
+        },
+        "demand": {
+          "type": "choice",
+          "choice": "2",
+          "probabilities": {
+            "0": 0,
+            "1": 0.11,
+            "2": 0.89
+          },
+          "confidence": 0.84
+        },
+        "missing": {
+          "type": "noul",
+          "noul": 0.15
+        }
+      },
+      "usage": {
+        "input_tokens": 1108,
+        "output_tokens": 109,
+        "cost": 4.6536e-05
+      },
+      "provider": "TypeSafe"
+    }
+  },
+  "medium_allocation": {
+    "decision": {
+      "task_id": "medium_allocation",
+      "model": "google/gemini-3.8-flash",
+      "reason": "demand=1; missing=0.130",
+      "input_hash": "5a2ee0f52e5ba61c8e25e9c1ae39978d2e94442b2e6ae355af27ddcb28e93bbe",
+      "fallback": false
+    },
+    "response": {
+      "id": "gen-dec-1789886791-d9t2rlTVuhjQFyFrlGGQ",
+      "model": "typesafe/jev-1.13-20260917",
+      "answers": {
+        "family": {
+          "type": "choice",
+          "choice": "implementation",
+          "probabilities": {
+            "other": 0,
+            "implementation": 1,
+            "refactor": 0,
+            "debugging": 0,
+            "explain": 0
+          },
+          "confidence": 1
+        },
+        "demand": {
+          "type": "choice",
+          "choice": "1",
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.88,
+            "2": 0.11
+          },
+          "confidence": 0.82
+        },
+        "missing": {
+          "type": "noul",
+          "noul": 0.13
+        }
+      },
+      "usage": {
+        "input_tokens": 835,
+        "output_tokens": 109,
+        "cost": 3.507e-05
+      },
+      "provider": "TypeSafe"
+    }
+  },
+  "medium_dependencies": {
+    "decision": {
+      "task_id": "medium_dependencies",
+      "model": "google/gemini-3.8-flash",
+      "reason": "demand=1; missing=0.160",
+      "input_hash": "677a67ce4eadb4713858874ac21626c54b816da5a9fd92c0eabeb53435603814",
+      "fallback": false
+    },
+    "response": {
+      "id": "gen-dec-1789886997-4qLFs5Qx92yKhVrKvpF3",
+      "model": "typesafe/jev-1.13-20260917",
+      "answers": {
+        "family": {
+          "type": "choice",
+          "choice": "implementation",
+          "probabilities": {
+            "explain": 0,
+            "other": 0,
+            "debugging": 0,
+            "refactor": 0,
+            "implementation": 1
+          },
+          "confidence": 1
+        },
+        "demand": {
+          "type": "choice",
+          "choice": "1",
+          "probabilities": {
+            "0": 0,
+            "1": 0.8,
+            "2": 0.2
+          },
+          "confidence": 0.7
+        },
+        "missing": {
+          "type": "noul",
+          "noul": 0.16
+        }
+      },
+      "usage": {
+        "input_tokens": 818,
+        "output_tokens": 109,
+        "cost": 3.4356e-05
+      },
+      "provider": "TypeSafe"
+    }
+  }
+}

@@ -14,6 +14,12 @@ class TestResult:
 IMAGE = "python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9"
 
 
+def _text(value):
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value or ""
+
+
 class DockerTests:
     def __init__(self, image=IMAGE, timeout=20):
         self.image = image
@@ -41,5 +47,5 @@ class DockerTests:
             output = ((completed.stdout or "") + (completed.stderr or ""))[-12000:]
             return TestResult(completed.returncode == 0, completed.returncode, output)
         except subprocess.TimeoutExpired as error:
-            output = ((error.stdout or "") + (error.stderr or ""))[-12000:]
+            output = (_text(error.stdout) + _text(error.stderr))[-12000:]
             return TestResult(False, 124, output + "\nTIMEOUT")

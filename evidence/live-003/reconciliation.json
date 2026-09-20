@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-09-20T06:32:10.531928+00:00",
+  "source_run": "D:\\projects\\Gen-AI\\jev-router\\artifacts\\live-002",
+  "source_journal_sha256": "0e14436e6fa2e0cea5b842f5f58b966de5439fe96c06747216fad5481ef00bf5",
+  "interrupted_tag": "session:always_economy:hard_safe_paths:turn:2",
+  "opening_balance": 4.688515873,
+  "observed_balance": 4.596644535,
+  "completed_journal_cost": 0.090596278,
+  "inferred_orphan_cost": 0.00127506,
+  "method": "Copied the immutable interrupted run, retained the inferred orphan charge under a distinct audit key, and removed only the unresolved request key so the exact request can be retried."
+}

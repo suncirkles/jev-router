@@ -15,6 +15,14 @@ Local Python library/CLI is the current delivery. HTTP service, framework adapte
 
 See [the pilot report](evidence/pilot-001/REPORT.md). The first run compares live Jev classifications and published RouteLLM MF decisions against the same archived LiveCodeBench outcomes. It does not measure agent execution quality or current solver performance.
 
+## Current-model coding-agent pilot
+
+See [the current-model report](evidence/live-003/REPORT.md). Six frozen Python repository tasks were run through the same bounded coding-agent loop with hidden tests. The fixed tiers were GLM 5.3 Flash, Gemini 3.8 Flash, and GPT-5.6 Sol; the controls were OpenRouter Auto constrained to those models and OpenRouter Auto unrestricted, both at the documented `low` cost tier.
+
+Jev B1 passed 1/6 hidden suites for $0.2219. Both Auto controls and always-GLM passed 2/6 for $0.0093-$0.0136. Auto selected GLM 5.3 Flash for every turn, so this pilot compares Jev with a low-cost Auto policy that behaved like an always-GLM baseline; it does not establish how other Auto cost tiers behave. Four tasks were not solved by any fixed tier, which exposes a candidate/agent-verification ceiling rather than four independent router errors. Several frontier runs passed visible tests and failed hidden edge cases, confirming that visible-test success alone is not an adequate routing label.
+
+This six-task, one-sample pilot rejects B1 as a useful policy in its current form. It is too small to establish general model or router rankings. The next experiment should first improve task discrimination and add verification-triggered escalation, then remeasure on a fresh holdout with repeated samples.
+
 ## Run from this machine
 
 The interpreter resolved from `D:\\projects\\Gen-AI\\loadenv.bat` is `D:\\projects\\Gen-AI\\agentic\\agentic\\Scripts\\python.exe`. No dependencies were installed into that shared environment.
@@ -65,9 +73,9 @@ After validating the quality evaluator, use a fresh holdout for each decision:
 2. Add bounded repository/task context and explicit missing-context handling.
 3. Add uncertainty-based abstention or strong-model escalation, with measured calibration.
 4. Add verification-triggered retry/escalation using actual tool/test evidence.
-5. Fit a task-family-specific cost/quality policy, retaining fixed-model and RouteLLM controls.
+5. Fit a task-family-specific cost/quality policy, retaining fixed-model and OpenRouter Auto controls at explicitly recorded cost tiers.
 
-Implement one lever at a time. Keep the first pilot frozen; remeasure full task cost, quality failures, latency and recovery costs. OpenRouter Auto requires a separate live comparison using the same agent harness and tools.
+Implement one lever at a time. Keep each pilot frozen and remeasure full task cost, quality failures, latency, and recovery costs. The first live Auto comparison is recorded in `evidence/live-003`; future experiments should include more than one Auto cost tier when budget permits.
 
 ## Sources and attribution
 
