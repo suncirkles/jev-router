@@ -31,6 +31,8 @@ The static SWE labels are routing supervision, and the upstream manifest marks t
 
 The first calibrated result is recorded in [the calibration report](evidence/twin-calibrated-001/REPORT.md). Calibration recovers step-level signal, but its safe q90 policy routes every holdout step to `mid_high` or `high` and saves only 2.27% under the benchmark's failure-aware cost model. Dynamic execution is deferred until the static policy preserves trajectories without collapsing toward always-high.
 
+The [opaque-identity diagnostic](evidence/twin-opaque-001/REPORT.md) hides all target model names behind a seeded A/B/C/D permutation while retaining relative cost and capability profiles. Raw Jev argmax decisions agreed with the named run on 89.68% of 252 paired steps, and calibrated q90 made the same decision on every holdout row. Model-name priors therefore do not explain the current collapse toward always-high; the next experiment must improve task-requirement signal and measure its value against a metadata-only control.
+
 ```powershell
 $env:PYTHONPATH = "$PWD\src;$PWD\harness\src"
 $python = 'D:\projects\Gen-AI\agentic\agentic\Scripts\python.exe'

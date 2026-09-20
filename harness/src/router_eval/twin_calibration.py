@@ -21,12 +21,16 @@ from sklearn.preprocessing import StandardScaler
 from jev_router.provider import JournalClient
 from router_eval.twinrouterbench import (
     JevTwinPredictor,
+    IDENTITY_OPTION_TO_TIER,
     PINNED_TWINROUTERBENCH_COMMIT,
     Prediction,
     TIERS,
     _checkout_commit,
     _selected_cost,
     _static_summary,
+    opaque_model_mapping,
+    opaque_tier_question,
+    tier_probabilities,
 )
 
 
@@ -67,25 +71,30 @@ def _validate_split(split: dict[str, Any], rows: list[dict[str, Any]]) -> None:
         raise ValueError("split benchmark commit does not match adapter pin")
 
 
-def _latest_responses(client: JournalClient) -> dict[str, dict[str, Any]]:
+def _latest_responses(client: JournalClient, tag_namespace: str) -> dict[str, dict[str, Any]]:
     latest: dict[str, dict[str, Any]] = {}
     for event in client.events():
         latest[event["tag"]] = event
     return {
-        tag.removeprefix("twinrouterbench:"): event["response"]
+        tag.removeprefix(f"{tag_namespace}:"): event["response"]
         for tag, event in latest.items()
-        if tag.startswith("twinrouterbench:") and event.get("status") == "complete"
+        if tag.startswith(f"{tag_namespace}:") and event.get("status") == "complete"
     }
 
 
-def _probabilities(response: dict[str, Any]) -> np.ndarray:
-    values = response["answers"]["tier"]["probabilities"]
-    return np.array([float(values[str(index)]) for index in range(4)], dtype=np.float64)
+def _probabilities(
+    response: dict[str, Any], option_to_tier: tuple[int, ...] = IDENTITY_OPTION_TO_TIER
+) -> np.ndarray:
+    return np.array(tier_probabilities(response, option_to_tier), dtype=np.float64)
 
 
-def features(row: dict[str, Any], response: dict[str, Any]) -> np.ndarray:
+def features(
+    row: dict[str, Any],
+    response: dict[str, Any],
+    option_to_tier: tuple[int, ...] = IDENTITY_OPTION_TO_TIER,
+) -> np.ndarray:
     """Router-visible features only; target tier and evaluator metadata are excluded."""
-    probs = _probabilities(response)
+    probs = _probabilities(response, option_to_tier)
     messages = row["messages"]
     count = max(len(messages), 1)
     roles = [str(message.get("role", "")) for message in messages]
@@ -224,25 +233,45 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     selected_ids = set(split["train"]) | set(split["holdout"])
     selected = [row for row in rows if row["instance_id"] in selected_ids]
 
+    opaque_seed = getattr(args, "opaque_seed", None)
+    option_to_tier = (
+        opaque_model_mapping(opaque_seed) if opaque_seed is not None else IDENTITY_OPTION_TO_TIER
+    )
+    question = opaque_tier_question(option_to_tier) if opaque_seed is not None else None
+    tag_namespace = (
+        f"twinrouterbench-opaque-{opaque_seed}" if opaque_seed is not None else "twinrouterbench"
+    )
     client = JournalClient(args.journal, cap=args.spend_cap)
-    predictor = JevTwinPredictor(client)
+    predictor_kwargs: dict[str, Any] = {
+        "option_to_tier": option_to_tier,
+        "tag_namespace": tag_namespace,
+    }
+    if question is not None:
+        predictor_kwargs["question"] = question
+    predictor = JevTwinPredictor(client, **predictor_kwargs)
     for row in selected:
         predictor.predict(row)
-    responses = _latest_responses(client)
+    responses = _latest_responses(client, tag_namespace)
     missing = [row["id"] for row in selected if row["id"] not in responses]
     if missing:
         raise RuntimeError(f"missing completed Jev responses for {len(missing)} selected rows")
 
     train = [row for row in selected if row["instance_id"] in set(split["train"])]
     holdout = [row for row in selected if row["instance_id"] in set(split["holdout"])]
-    train_x = np.stack([features(row, responses[row["id"]]) for row in train])
+    train_x = np.stack(
+        [features(row, responses[row["id"]], option_to_tier) for row in train]
+    )
     train_y = np.array([row["target_tier_id"] for row in train], dtype=np.int64)
     train_groups = np.array([row["instance_id"] for row in train])
-    holdout_x = np.stack([features(row, responses[row["id"]]) for row in holdout])
+    holdout_x = np.stack(
+        [features(row, responses[row["id"]], option_to_tier) for row in holdout]
+    )
 
     model, cross_validation = fit_grouped_model(train_x, train_y, train_groups)
     calibrated_probabilities = _probability_matrix(model, holdout_x)
-    direct = [int(np.argmax(_probabilities(responses[row["id"]]))) for row in holdout]
+    direct = [
+        int(np.argmax(_probabilities(responses[row["id"]], option_to_tier))) for row in holdout
+    ]
     argmax = np.argmax(calibrated_probabilities, axis=1).tolist()
     safe = quantile_tiers(calibrated_probabilities, 0.90).tolist()
     policies: dict[str, list[int]] = {
@@ -256,8 +285,22 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     output = Path(args.output)
     output.mkdir(parents=True, exist_ok=True)
     result = {
-        "experiment": split["experiment"],
+        "experiment": (
+            "twinrouterbench-static-jev-opaque-calibrated-v1"
+            if opaque_seed is not None
+            else split["experiment"]
+        ),
         "benchmark_commit": PINNED_TWINROUTERBENCH_COMMIT,
+        "identity_blinding": {
+            "enabled": opaque_seed is not None,
+            "seed": opaque_seed,
+            "option_to_tier": {
+                chr(ord("A") + option): TIERS[tier_id]
+                for option, tier_id in enumerate(option_to_tier)
+            },
+            "question": question,
+            "tag_namespace": tag_namespace,
+        },
         "split": split,
         "train_rows": len(train),
         "holdout_rows": len(holdout),
@@ -269,7 +312,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "argmax": "Most probable calibrated required tier.",
             "q90": "Smallest tier covering 90% of calibrated required-tier probability mass.",
         },
-        "selected_rows_jev_cost_usd": _selected_cost(client, {row["id"] for row in selected}),
+        "selected_rows_jev_cost_usd": _selected_cost(
+            client, {row["id"] for row in selected}, tag_namespace
+        ),
         "campaign_accounted_cost_usd": client.accounted(),
         "holdout": {name: _score(holdout, predictions, section11) for name, predictions in policies.items()},
     }
@@ -292,6 +337,7 @@ def main() -> None:
     parser.add_argument("--output", required=True)
     parser.add_argument("--spend-cap", type=float, default=0.20)
     parser.add_argument("--full-cost-scores", action="store_true")
+    parser.add_argument("--opaque-seed", type=int)
     args = parser.parse_args()
     print(json.dumps(run(args), indent=2, ensure_ascii=True, allow_nan=False))
 

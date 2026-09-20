@@ -1,0 +1,61 @@
+{
+  "experiment": "twinrouterbench-static-jev-opaque-calibrated-v1",
+  "comparison": "twinrouterbench-static-jev-calibrated-v1",
+  "diagnostic_only": true,
+  "reason": "The same previously inspected holdout was reused for a paired explanatory comparison.",
+  "opaque_seed": 20260922,
+  "option_to_tier": {
+    "A": "mid_high",
+    "B": "low",
+    "C": "high",
+    "D": "mid"
+  },
+  "all_rows_paired_raw_jev": {
+    "rows": 252,
+    "same_argmax_count": 226,
+    "same_argmax_percent": 89.68253968253968,
+    "mean_absolute_probability_change": 0.039117063492063495,
+    "mean_total_variation_distance": 0.07823412698412699,
+    "named_mean_probabilities": [
+      0.6472222222222225,
+      0.2921428571428572,
+      0.0571825396825396,
+      0.0032539682539682556
+    ],
+    "opaque_mean_probabilities": [
+      0.7024206349206346,
+      0.25373015873015886,
+      0.041507936507936355,
+      0.002261904761904763
+    ],
+    "named_argmax_counts": [195, 57, 0, 0],
+    "opaque_argmax_counts": [221, 31, 0, 0],
+    "per_tier_probability_correlation": [
+      0.9668832906029163,
+      0.9420328104360813,
+      0.83547787997272,
+      0.6816902456641051
+    ]
+  },
+  "holdout_paired_calibrated_decisions": {
+    "rows": 63,
+    "argmax": {
+      "same_rows": 56,
+      "same_percent": 88.88888888888889,
+      "named_counts_low_to_high": [24, 11, 4, 24],
+      "opaque_counts_low_to_high": [21, 10, 7, 25]
+    },
+    "q90": {
+      "same_rows": 63,
+      "same_percent": 100.0,
+      "named_counts_low_to_high": [0, 0, 8, 55],
+      "opaque_counts_low_to_high": [0, 0, 8, 55]
+    }
+  },
+  "cross_validated_log_loss": {
+    "named": 1.2364859160782606,
+    "opaque": 1.2497247328663679
+  },
+  "jev_cost_usd": 0.067271484,
+  "api_errors": 0
+}

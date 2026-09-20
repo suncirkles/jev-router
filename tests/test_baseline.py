@@ -15,7 +15,14 @@ from router_eval.live_runner import _cheapest_passing_tier, _frozen_cap
 from router_eval.metrics import evaluate, paired_interval
 from router_eval.quality import acceptance, inspect_artifact, REQUIRED
 from router_eval.sandbox import DockerTests
-from router_eval.twinrouterbench import JevTwinPredictor, TIER_QUESTION, visible_state
+from router_eval.twinrouterbench import (
+    JevTwinPredictor,
+    TIER_QUESTION,
+    opaque_model_mapping,
+    opaque_tier_question,
+    tier_probabilities,
+    visible_state,
+)
 from router_eval.twin_calibration import features as calibration_features, quantile_tiers
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -284,6 +291,50 @@ def test_twinrouter_jev_selects_highest_probability_and_conservative_tie():
     assert JevTwinPredictor(client).predict(row).tier_id == 2
     assert client.payload["questions"] == TIER_QUESTION
     assert "target_tier_id" not in client.payload["state"]
+
+
+def test_opaque_question_hides_model_names_and_remaps_probabilities():
+    mapping = opaque_model_mapping(20260922)
+    assert mapping == (2, 0, 3, 1)
+    question = opaque_tier_question(mapping)
+    serialized = json.dumps(question)
+    assert all(name not in serialized for name in ("DeepSeek", "MiniMax", "Gemini", "Claude"))
+    assert "Model A" in serialized and "Model D" in serialized
+    assert "relative cost is third-lowest" in question["tier"]["criteria"]["0"]
+    assert "relative cost is lowest" in question["tier"]["criteria"]["1"]
+
+    response = {
+        "answers": {"tier": {"probabilities": {"0": .1, "1": .2, "2": .6, "3": .1}}}
+    }
+    assert tier_probabilities(response, mapping) == [.2, .1, .1, .6]
+
+
+def test_opaque_predictor_uses_harness_mapping_and_separate_journal_namespace():
+    row = {"id": "x", "benchmark": "swebench", "messages": []}
+    mapping = (2, 0, 3, 1)
+
+    class Client:
+        def __init__(self):
+            self.tag = None
+
+        def post(self, endpoint, payload, tag, reserve):
+            self.tag = tag
+            return {
+                "model": "typesafe/jev-1.13-20260917",
+                "answers": {
+                    "tier": {"probabilities": {"0": .1, "1": .2, "2": .6, "3": .1}}
+                },
+            }
+
+    client = Client()
+    predictor = JevTwinPredictor(
+        client,
+        question=opaque_tier_question(mapping),
+        option_to_tier=mapping,
+        tag_namespace="opaque-test",
+    )
+    assert predictor.predict(row).tier_id == 3
+    assert client.tag == "opaque-test:x"
 
 
 def test_calibration_features_do_not_depend_on_target_label():
