@@ -1,0 +1,7 @@
+{
+  "id": "easy_normalize",
+  "difficulty": "easy",
+  "prompt": "Implement normalize_key(value) in key_normalizer.py. Require a string, normalize it with Unicode NFKC, strip surrounding whitespace, casefold it, replace every maximal run of non-alphanumeric characters with one hyphen, and strip leading/trailing hyphens. Unicode letters and digits count as alphanumeric. Raise TypeError for non-strings and ValueError when the result is empty. Keep the public API unchanged.",
+  "editable": ["key_normalizer.py"],
+  "visible_tests": "tests"
+}

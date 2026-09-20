@@ -1,0 +1,7 @@
+{
+  "id": "hard_safe_paths",
+  "difficulty": "hard",
+  "prompt": "Implement build_extraction_plan(names, destination) in safe_paths.py. It receives archive member names and returns (original_name, destination_path) tuples without touching the filesystem. Treat both slash styles as separators. Reject non-string/empty names, NULs, absolute paths, UNC paths, drive-qualified paths, trailing separators, and any '..' component. Ignore '.' components and repeated separators. Every resulting target must remain lexically under destination. Reject target collisions case-insensitively, including collisions created by normalization. Preserve input order. Raise UnsafePathError for unsafe input. This function plans files only; directory entries are invalid.",
+  "editable": ["safe_paths.py"],
+  "visible_tests": "tests"
+}

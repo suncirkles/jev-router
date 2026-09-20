@@ -1,0 +1,7 @@
+{
+  "id": "easy_intervals",
+  "difficulty": "easy",
+  "prompt": "Fix collapse(values) in intervals.py. It must accept any iterable of integers, remove duplicates, sort ascending, and render consecutive runs as start-end while single values remain bare, joined by commas. Negative ranges are written literally, for example [-3,-2,-1,1,2,4] becomes '-3--1,1-2,4'. Empty input returns ''. Reject booleans and non-integers with TypeError. Do not mutate the input.",
+  "editable": ["intervals.py"],
+  "visible_tests": "tests"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "medium_dependencies",
+  "difficulty": "medium",
+  "prompt": "Implement build_order(dependencies) in dependencies.py. The input is a mapping from task name to an iterable of names that task depends on. Return a deterministic topological order, always choosing the lexically smallest currently available task. Every dependency must also be a mapping key. Reject empty/non-string names, string-like dependency iterables, self-dependencies, missing tasks, and cycles using DependencyError. Duplicate dependency entries have no additional effect. Do not mutate the input.",
+  "editable": ["dependencies.py"],
+  "visible_tests": "tests"
+}

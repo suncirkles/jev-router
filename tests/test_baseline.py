@@ -7,10 +7,13 @@ from jev_router.answers import normalize
 from jev_router.contracts import Task, Candidates, probabilities
 from jev_router.policy import decide
 from jev_router.provider import JournalClient
+from jev_router.tiers import TierCandidates, decide_tier
 from router_eval.comparators import mf_score, read_weights
 from router_eval.data import MODELS, load, split, task_for, freeze
+from router_eval.live_tasks import Workspace, load_tasks
 from router_eval.metrics import evaluate, paired_interval
 from router_eval.quality import acceptance, inspect_artifact, REQUIRED
+from router_eval.sandbox import DockerTests
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -49,6 +52,35 @@ def test_noul_normalization():
     a = assessment()
     response = {"family": {"probabilities": a["family"]}, "demand": {"probabilities": a["demand"]}, "missing": {"noul": .25}}
     assert normalize(response)["missing"] == {"yes": .25, "no": .75}
+
+
+@pytest.mark.parametrize("level,missing,expected", [
+    (0, 0, "economy"), (1, 0, "standard"), (2, 0, "frontier"), (0, .5, "frontier")
+])
+def test_three_tier_policy(level, missing, expected):
+    candidates = TierCandidates("economy", "standard", "frontier")
+    assert decide_tier(Task("x", "Task"), candidates, assessment(level, missing)).model == expected
+
+
+def test_three_tier_candidates_are_distinct():
+    with pytest.raises(ValueError):
+        TierCandidates("same", "same", "frontier")
+
+
+def test_live_tasks_frozen_and_workspace_confined(tmp_path):
+    tasks = load_tasks(ROOT / "harness/live_tasks")
+    assert [task.difficulty for task in tasks].count("easy") == 2
+    assert [task.difficulty for task in tasks].count("medium") == 2
+    assert [task.difficulty for task in tasks].count("hard") == 2
+    task = tasks[0]
+    workspace = Workspace(task, tmp_path / "workspace")
+    with pytest.raises(ValueError):
+        workspace.read("../task.json")
+    with pytest.raises(ValueError):
+        workspace.write("tests/test_visible.py", "pass")
+    editable = task.editable[0]
+    workspace.write(editable, "# changed\n")
+    assert workspace.read(editable) == "# changed\n"
 
 
 def test_quality_major_cannot_be_compensated():
@@ -141,3 +173,22 @@ def test_paid_request_cache_is_reused(tmp_path, monkeypatch):
     assert a == b and len(calls) == 1
     assert client.accounted() == .001
     assert "user_id" not in (tmp_path / "journal").read_text()
+
+
+def test_docker_output_is_decoded_as_utf8(tmp_path, monkeypatch):
+    observed = {}
+
+    class Completed:
+        returncode = 0
+        stdout = "Καλημέρα"
+        stderr = None
+
+    def fake_run(*args, **kwargs):
+        observed.update(kwargs)
+        return Completed()
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    result = DockerTests().run(tmp_path)
+    assert observed["encoding"] == "utf-8"
+    assert observed["errors"] == "replace"
+    assert result.output == "Καλημέρα"

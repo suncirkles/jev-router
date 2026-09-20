@@ -7,10 +7,11 @@ from .contracts import digest
 
 
 class JournalClient:
-    def __init__(self, path, cap=0.50):
+    def __init__(self, path, cap=0.50, timeout=180):
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.cap = cap
+        self.timeout = timeout
 
     def events(self):
         if not self.path.exists():
@@ -49,7 +50,9 @@ class JournalClient:
         self.append(event)
         # Timeouts intentionally leave a pending entry: do not blindly rebill.
         response = requests.post("https://openrouter.ai" + endpoint, json=payload,
-                                 headers={"Authorization": "Bearer " + api_key}, timeout=90)
+                                 headers={"Authorization": "Bearer " + api_key,
+                                          "X-OpenRouter-Metadata": "enabled"},
+                                 timeout=self.timeout)
         if response.status_code != 200:
             self.append({**event, "status": "failed", "http_status": response.status_code,
                          "cost": reserve})
@@ -58,7 +61,7 @@ class JournalClient:
         if "error" in body:
             self.append({**event, "status": "failed", "cost": reserve})
             raise RuntimeError("Provider returned an error; reserved charge retained")
-        safe = {k: body[k] for k in ("id", "model", "answers", "data", "usage", "provider") if k in body}
+        safe = {k: body[k] for k in ("id", "model", "answers", "choices", "data", "usage", "provider", "openrouter_metadata") if k in body}
         usage = body.get("usage", {})
         measured = isinstance(usage.get("cost"), (int, float))
         cost = float(usage["cost"]) if measured else reserve

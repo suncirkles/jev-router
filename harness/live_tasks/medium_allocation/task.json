@@ -1,0 +1,7 @@
+{
+  "id": "medium_allocation",
+  "difficulty": "medium",
+  "prompt": "Implement allocate(total_cents, weights) in allocation.py using the largest-remainder method. total_cents must be a non-negative integer (bool is invalid). weights is a mapping with non-empty string keys and values accepted by Decimal; weights must be finite and non-negative, with at least one positive value. Allocate integer cents proportional to weights, floor each exact share, then assign leftover cents by descending fractional remainder with lexical key order as the tie-breaker. Return a dict inserted in lexical key order. Raise TypeError for structural/type errors and ValueError for invalid numeric values. Do not use binary floating point.",
+  "editable": ["allocation.py"],
+  "visible_tests": "tests"
+}

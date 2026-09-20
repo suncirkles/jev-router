@@ -1,0 +1,7 @@
+{
+  "id": "hard_ttl_cache",
+  "difficulty": "hard",
+  "prompt": "Implement TTLCache in ttl_cache.py. TTLCache(ttl_seconds, clock=time.monotonic) validates a finite non-negative TTL. get_or_compute(key, factory) returns a non-expired cached value. For an expired/missing key, exactly one thread runs factory while concurrent callers for that same key wait and receive the same value. Different keys must not block each other's factory execution. Cache successful values including None; do not cache exceptions, but propagate the same failure to current waiters and allow a later call to retry. Expiry is measured from factory completion. A zero TTL still shares one in-flight result with current waiters but a later call recomputes. clear() invalidates stored values without corrupting in-flight coordination. Use only the standard library.",
+  "editable": ["ttl_cache.py"],
+  "visible_tests": "tests"
+}
