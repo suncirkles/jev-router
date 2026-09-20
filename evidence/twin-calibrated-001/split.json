@@ -1,0 +1,52 @@
+{
+  "experiment": "twinrouterbench-static-jev-calibrated-v1",
+  "benchmark_commit": "7cbb0deac8f697b5faa8489c309560e53d2ef088",
+  "seed": 20260921,
+  "selection_rule": "Exclude every trajectory touched by the prior OOB campaign, then sample 8 holdout trajectories by Python random.Random(seed); all remaining trajectories are calibration training data.",
+  "previously_touched": [
+    "django__django-11066",
+    "django__django-12262",
+    "django__django-12276",
+    "pallets__flask-5014",
+    "psf__requests-1142",
+    "pylint-dev__pylint-4551",
+    "pytest-dev__pytest-10051",
+    "sympy__sympy-11618",
+    "sympy__sympy-12096",
+    "sympy__sympy-12419"
+  ],
+  "train": [
+    "astropy__astropy-12907",
+    "django__django-10554",
+    "django__django-10880",
+    "django__django-11087",
+    "django__django-11099",
+    "django__django-11119",
+    "django__django-11133",
+    "django__django-11163",
+    "django__django-11999",
+    "django__django-12273",
+    "django__django-12325",
+    "matplotlib__matplotlib-13989",
+    "matplotlib__matplotlib-14623",
+    "matplotlib__matplotlib-20488",
+    "psf__requests-1724",
+    "pydata__xarray-2905",
+    "pydata__xarray-3095",
+    "pytest-dev__pytest-10081",
+    "scikit-learn__scikit-learn-10297",
+    "scikit-learn__scikit-learn-10844",
+    "sphinx-doc__sphinx-10323",
+    "sphinx-doc__sphinx-10449"
+  ],
+  "holdout": [
+    "astropy__astropy-13033",
+    "django__django-10097",
+    "django__django-10914",
+    "django__django-10973",
+    "django__django-10999",
+    "pylint-dev__pylint-4604",
+    "sphinx-doc__sphinx-10435",
+    "sympy__sympy-12481"
+  ]
+}

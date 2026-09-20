@@ -16,6 +16,7 @@ from router_eval.metrics import evaluate, paired_interval
 from router_eval.quality import acceptance, inspect_artifact, REQUIRED
 from router_eval.sandbox import DockerTests
 from router_eval.twinrouterbench import JevTwinPredictor, TIER_QUESTION, visible_state
+from router_eval.twin_calibration import features as calibration_features, quantile_tiers
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -283,3 +284,24 @@ def test_twinrouter_jev_selects_highest_probability_and_conservative_tie():
     assert JevTwinPredictor(client).predict(row).tier_id == 2
     assert client.payload["questions"] == TIER_QUESTION
     assert "target_tier_id" not in client.payload["state"]
+
+
+def test_calibration_features_do_not_depend_on_target_label():
+    row = {
+        "id": "x",
+        "benchmark": "swebench",
+        "messages": [{"role": "user", "content": "fix it"}],
+        "step_index": 1,
+        "total_steps": 2,
+        "target_tier_id": 0,
+    }
+    response = {"answers": {"tier": {"probabilities": {"0": .6, "1": .3, "2": .08, "3": .02}}}}
+    first = calibration_features(row, response)
+    row["target_tier_id"] = 3
+    assert np.array_equal(first, calibration_features(row, response))
+
+
+def test_calibrated_quantile_routes_up_with_uncertainty():
+    matrix = np.array([[.6, .2, .1, .1], [.05, .05, .1, .8]])
+    assert quantile_tiers(matrix, .5).tolist() == [0, 3]
+    assert quantile_tiers(matrix, .9).tolist() == [2, 3]
