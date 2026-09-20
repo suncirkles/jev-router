@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "jev-route-eval"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["jev-route==0.1.0", "numpy>=1.26"]
+[project.scripts]
+jev-route-eval = "router_eval.cli:main"
+[tool.setuptools.packages.find]
+where = ["src"]

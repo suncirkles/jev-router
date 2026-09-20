@@ -1,0 +1,11 @@
+.cache/
+artifacts/*
+!artifacts/.gitkeep
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.package-smoke/
+.pytest_cache/
+.env
