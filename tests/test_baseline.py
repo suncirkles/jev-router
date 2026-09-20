@@ -15,6 +15,7 @@ from router_eval.live_runner import _cheapest_passing_tier, _frozen_cap
 from router_eval.metrics import evaluate, paired_interval
 from router_eval.quality import acceptance, inspect_artifact, REQUIRED
 from router_eval.sandbox import DockerTests
+from router_eval.twinrouterbench import JevTwinPredictor, TIER_QUESTION, visible_state
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -241,3 +242,44 @@ def test_docker_timeout_bytes_are_decoded(tmp_path, monkeypatch):
     assert result.returncode == 124
     assert "partial αerror" in result.output
     assert result.output.endswith("TIMEOUT")
+
+
+def test_twinrouter_visible_state_excludes_labels():
+    row = {
+        "id": "step-1",
+        "benchmark": "swebench",
+        "scenario": "code_swe",
+        "instance_id": "repo-1",
+        "step_index": 2,
+        "total_steps": 4,
+        "messages": [{"role": "user", "content": "fix it"}],
+        "target_tier": "high",
+        "target_tier_id": 3,
+        "notes": "private evaluator metadata",
+    }
+    state = visible_state(row)
+    assert state["messages"] == row["messages"]
+    assert "target_tier" not in state
+    assert "target_tier_id" not in state
+    assert "notes" not in state
+
+
+def test_twinrouter_jev_selects_highest_probability_and_conservative_tie():
+    row = {"id": "x", "benchmark": "swebench", "messages": []}
+
+    class Client:
+        def __init__(self, values):
+            self.values = values
+            self.payload = None
+
+        def post(self, endpoint, payload, tag, reserve):
+            self.payload = payload
+            return {
+                "model": "typesafe/jev-1.13-20260917",
+                "answers": {"tier": {"probabilities": self.values}},
+            }
+
+    client = Client({"0": 0.1, "1": 0.4, "2": 0.4, "3": 0.1})
+    assert JevTwinPredictor(client).predict(row).tier_id == 2
+    assert client.payload["questions"] == TIER_QUESTION
+    assert "target_tier_id" not in client.payload["state"]

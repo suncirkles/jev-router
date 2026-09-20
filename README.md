@@ -23,6 +23,21 @@ Jev B1 passed 1/6 hidden suites for $0.2219. Both Auto controls and always-GLM p
 
 This six-task, one-sample pilot rejects B1 as a useful policy in its current form. It is too small to establish general model or router rankings. The next experiment should first improve task discrimination and add verification-triggered escalation, then remeasure on a fresh holdout with repeated samples.
 
+## TwinRouterBench evaluation
+
+The current baseline uses TwinRouterBench's static SWE-bench trajectory bank and locked April 2026 pool: DeepSeek V3.2, MiniMax M2.7, Gemini 3 Flash Preview, and Claude Opus 4.6. The adapter asks Jev to choose the least expensive sufficient model for the next agent call, then uses TwinRouterBench's own scorer against fixed-tier and oracle controls. See [the baseline report](evidence/twin-static-001/REPORT.md).
+
+The static SWE labels are routing supervision, and the upstream manifest marks them as weak labels rather than strict ground truth. Static results measure agreement with the benchmark's cheapest-sufficient-tier labels. They do not prove that a routed coding agent resolves the issue; the benchmark's dynamic SWE-bench track is the outcome test.
+
+```powershell
+$env:PYTHONPATH = "$PWD\src;$PWD\harness\src"
+$python = 'D:\projects\Gen-AI\agentic\agentic\Scripts\python.exe'
+& $python -m router_eval.twinrouterbench `
+  --benchmark-root D:\path\to\TwinRouterBench `
+  --output artifacts\twin-static-001 `
+  --trajectories 8
+```
+
 ## Run from this machine
 
 The interpreter resolved from `D:\\projects\\Gen-AI\\loadenv.bat` is `D:\\projects\\Gen-AI\\agentic\\agentic\\Scripts\\python.exe`. No dependencies were installed into that shared environment.
