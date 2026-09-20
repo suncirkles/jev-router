@@ -33,6 +33,8 @@ The first calibrated result is recorded in [the calibration report](evidence/twi
 
 The [opaque-identity diagnostic](evidence/twin-opaque-001/REPORT.md) hides all target model names behind a seeded A/B/C/D permutation while retaining relative cost and capability profiles. Raw Jev argmax decisions agreed with the named run on 89.68% of 252 paired steps, and calibrated q90 made the same decision on every holdout row. Model-name priors therefore do not explain the current collapse toward always-high; the next experiment must improve task-requirement signal and measure its value against a metadata-only control.
 
+The [task-decomposition ablation](evidence/twin-decomposition-001/REPORT.md) compares metadata-only calibration with direct and decomposed Jev signals using nested trajectory-grouped evaluation. The predeclared five-question representation performed worse than metadata alone. A post-hoc five-scalar representation was more promising, but its trajectory-bootstrap interval includes no improvement and its q90 policy still has negative failure-aware savings. Current evidence therefore does not establish incremental routing value from Jev, and dynamic execution remains deferred.
+
 ```powershell
 $env:PYTHONPATH = "$PWD\src;$PWD\harness\src"
 $python = 'D:\projects\Gen-AI\agentic\agentic\Scripts\python.exe'

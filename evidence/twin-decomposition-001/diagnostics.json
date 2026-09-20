@@ -1,0 +1,101 @@
+{
+  "experiment": "twinrouterbench-jev-decomposition-ablation-v1",
+  "question_diagnostics": {
+    "scope": {
+      "argmax_counts_0_1_2": [191, 59, 2],
+      "expected_severity_mean": 0.4638492063492064,
+      "expected_severity_std": 0.32924978618932976,
+      "correlation_with_gold_tier": 0.2415567006483314,
+      "mean_expected_severity_by_gold_tier": [
+        0.3317741935483871,
+        0.44,
+        0.4772727272727273,
+        0.5277099236641221
+      ]
+    },
+    "uncertainty": {
+      "argmax_counts_0_1_2": [114, 138, 0],
+      "expected_severity_mean": 0.567063492063492,
+      "expected_severity_std": 0.3084422393518386,
+      "correlation_with_gold_tier": 0.18781643871153952,
+      "mean_expected_severity_by_gold_tier": [
+        0.4724193548387097,
+        0.5242307692307693,
+        0.6081818181818182,
+        0.61
+      ]
+    },
+    "recovery": {
+      "argmax_counts_0_1_2": [140, 110, 2],
+      "expected_severity_mean": 0.4509920634920635,
+      "expected_severity_std": 0.4637547414900166,
+      "correlation_with_gold_tier": 0.12312203787433988,
+      "mean_expected_severity_by_gold_tier": [
+        0.3895161290322581,
+        0.38461538461538464,
+        0.35030303030303034,
+        0.5186259541984732
+      ]
+    },
+    "correctness_risk": {
+      "argmax_counts_0_1_2": [111, 122, 19],
+      "expected_severity_mean": 0.766111111111111,
+      "expected_severity_std": 0.3972594055190746,
+      "correlation_with_gold_tier": 0.011651625562688716,
+      "mean_expected_severity_by_gold_tier": [
+        0.7843548387096775,
+        0.6715384615384614,
+        0.7675757575757576,
+        0.7758778625954198
+      ]
+    },
+    "verification_burden": {
+      "argmax_counts_0_1_2": [50, 199, 3],
+      "expected_severity_mean": 0.8292857142857143,
+      "expected_severity_std": 0.23907785333369655,
+      "correlation_with_gold_tier": 0.10029076568271748,
+      "mean_expected_severity_by_gold_tier": [
+        0.7953225806451614,
+        0.7992307692307693,
+        0.8363636363636363,
+        0.8495419847328244
+      ]
+    }
+  },
+  "post_hoc_reduced_representation": {
+    "description": "Expected severity for each of five Jev questions plus the eight metadata features.",
+    "feature_count": 13,
+    "nested_oof_log_loss": 1.2410941192717877,
+    "nested_oof_multiclass_brier": 0.6719242141834415,
+    "q90": {
+      "case_pass_rate_percent": 99.47089947089947,
+      "case_exact_match_percent": 53.439153439153436,
+      "trajectory_pass_rate_percent": 96.82539682539682,
+      "cost_savings_score_percent": -0.6272777755970148,
+      "combined_score_percent": 62.27704298996318,
+      "selection_counts": {
+        "mid_high": 22,
+        "high": 167
+      }
+    },
+    "selected_C_by_outer_fold": [0.1, 0.1, 0.1, 0.1, 0.1]
+  },
+  "paired_cluster_bootstrap": {
+    "seed": 20260920,
+    "replicates": 10000,
+    "cluster": "trajectory",
+    "metric": "delta nested-out-of-fold row log loss versus metadata-only; negative is better",
+    "direct_jev": {
+      "delta": -0.007917774995690843,
+      "interval_95_percent": [-0.08173348495265088, 0.058451736753225805]
+    },
+    "decomposed_full": {
+      "delta": 0.10126667535752507,
+      "interval_95_percent": [-0.029034754845240637, 0.2520185371425257]
+    },
+    "decomposed_reduced_posthoc": {
+      "delta": -0.028473370687556253,
+      "interval_95_percent": [-0.10323864366592665, 0.045741140026922755]
+    }
+  }
+}

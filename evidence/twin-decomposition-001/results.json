@@ -1,0 +1,709 @@
+{
+  "experiment": "twinrouterbench-jev-decomposition-ablation-v1",
+  "benchmark_commit": "7cbb0deac8f697b5faa8489c309560e53d2ef088",
+  "jev_model": "typesafe/jev-1.13-20260917",
+  "questions": {
+    "scope": {
+      "type": "choice",
+      "instructions": "Assess the reasoning scope of the NEXT coding-agent call.",
+      "criteria": {
+        "0": "localized, routine, or a direct action with little cross-file reasoning",
+        "1": "multiple files or components with meaningful interactions",
+        "2": "repository-wide, architectural, or dependent on uncertain system interactions"
+      }
+    },
+    "uncertainty": {
+      "type": "choice",
+      "instructions": "Assess uncertainty in what the NEXT coding-agent call should do.",
+      "criteria": {
+        "0": "the next action and expected result are clear from available evidence",
+        "1": "some diagnosis or choice among plausible approaches remains",
+        "2": "the cause, intended behavior, or viable approach remains ambiguous or conflicting"
+      }
+    },
+    "recovery": {
+      "type": "choice",
+      "instructions": "Assess whether the NEXT call must recover from unsuccessful work.",
+      "criteria": {
+        "0": "no failed approach needs recovery",
+        "1": "an attempted change, command, or test left an unresolved problem",
+        "2": "repeated or consequential failures require reassessment of the approach"
+      }
+    },
+    "correctness_risk": {
+      "type": "choice",
+      "instructions": "Assess the correctness risk of a plausible mistake in the NEXT call.",
+      "criteria": {
+        "0": "low-risk and easily reversible with direct feedback",
+        "1": "edge cases, compatibility, state, or non-obvious behavior could be missed",
+        "2": "subtle invariants, concurrency, security, data integrity, or broad regressions are at risk"
+      }
+    },
+    "verification_burden": {
+      "type": "choice",
+      "instructions": "Assess how demanding verification is for the NEXT call.",
+      "criteria": {
+        "0": "one direct check gives strong evidence",
+        "1": "multiple tests, edge cases, or cross-file checks are needed",
+        "2": "broad regression analysis or an incomplete or indirect oracle makes verification difficult"
+      }
+    }
+  },
+  "split": {
+    "experiment": "twinrouterbench-static-jev-calibrated-v1",
+    "benchmark_commit": "7cbb0deac8f697b5faa8489c309560e53d2ef088",
+    "seed": 20260921,
+    "selection_rule": "Exclude every trajectory touched by the prior OOB campaign, then sample 8 holdout trajectories by Python random.Random(seed); all remaining trajectories are calibration training data.",
+    "previously_touched": [
+      "django__django-11066",
+      "django__django-12262",
+      "django__django-12276",
+      "pallets__flask-5014",
+      "psf__requests-1142",
+      "pylint-dev__pylint-4551",
+      "pytest-dev__pytest-10051",
+      "sympy__sympy-11618",
+      "sympy__sympy-12096",
+      "sympy__sympy-12419"
+    ],
+    "train": [
+      "astropy__astropy-12907",
+      "django__django-10554",
+      "django__django-10880",
+      "django__django-11087",
+      "django__django-11099",
+      "django__django-11119",
+      "django__django-11133",
+      "django__django-11163",
+      "django__django-11999",
+      "django__django-12273",
+      "django__django-12325",
+      "matplotlib__matplotlib-13989",
+      "matplotlib__matplotlib-14623",
+      "matplotlib__matplotlib-20488",
+      "psf__requests-1724",
+      "pydata__xarray-2905",
+      "pydata__xarray-3095",
+      "pytest-dev__pytest-10081",
+      "scikit-learn__scikit-learn-10297",
+      "scikit-learn__scikit-learn-10844",
+      "sphinx-doc__sphinx-10323",
+      "sphinx-doc__sphinx-10449"
+    ],
+    "holdout": [
+      "astropy__astropy-13033",
+      "django__django-10097",
+      "django__django-10914",
+      "django__django-10973",
+      "django__django-10999",
+      "pylint-dev__pylint-4604",
+      "sphinx-doc__sphinx-10435",
+      "sympy__sympy-12481"
+    ]
+  },
+  "evaluation_design": {
+    "primary": "Five-fold outer trajectory-grouped out-of-fold evaluation on the 22 development trajectories. Each outer training fold selects logistic-regression C using its own five-fold trajectory-grouped inner cross-validation.",
+    "secondary": "The previously inspected eight-trajectory holdout is diagnostic only and is not a fresh generalization estimate.",
+    "fixed_policy": "q90 selects the smallest tier covering 90% required-tier probability."
+  },
+  "train_rows": 189,
+  "train_trajectories": 22,
+  "holdout_rows": 63,
+  "holdout_trajectories": 8,
+  "train_tier_counts": {
+    "low": 44,
+    "mid": 21,
+    "high": 97,
+    "mid_high": 27
+  },
+  "variants": {
+    "metadata_only": {
+      "feature_names": [
+        "step_progress",
+        "log_total_steps",
+        "log_message_count",
+        "log_character_count",
+        "assistant_message_fraction",
+        "tool_message_fraction",
+        "has_tool_call",
+        "last_role_assistant_or_tool"
+      ],
+      "feature_count": 8,
+      "primary_nested_oof": {
+        "log_loss": 1.2695674899593439,
+        "multiclass_brier": 0.6766710422904928,
+        "argmax": {
+          "metrics": {
+            "case_pass_rate_percent": 66.13756613756614,
+            "case_exact_match_percent": 46.03174603174603,
+            "trajectory_pass_rate_percent": 3.1746031746031744,
+            "cost_savings_score_percent": -69.16544356402451,
+            "combined_score_percent": 11.544617944972709
+          },
+          "selection_counts": {
+            "mid_high": 30,
+            "low": 59,
+            "high": 80,
+            "mid": 20
+          },
+          "under_route_percent": 33.86243386243386,
+          "over_route_percent": 20.105820105820104,
+          "high_required_recall_percent": 55.670103092783506
+        },
+        "q90": {
+          "metrics": {
+            "case_pass_rate_percent": 98.41269841269842,
+            "case_exact_match_percent": 52.91005291005291,
+            "trajectory_pass_rate_percent": 90.47619047619048,
+            "cost_savings_score_percent": -5.924485315435181,
+            "combined_score_percent": 58.96861412087666
+          },
+          "selection_counts": {
+            "mid_high": 28,
+            "high": 159,
+            "mid": 2
+          },
+          "under_route_percent": 1.5873015873015872,
+          "over_route_percent": 45.5026455026455,
+          "high_required_recall_percent": 97.9381443298969
+        }
+      },
+      "outer_folds": [
+        {
+          "fold": 1,
+          "held_out_trajectories": [
+            "django__django-11999",
+            "django__django-12325",
+            "psf__requests-1724",
+            "pydata__xarray-2905"
+          ],
+          "selected_C": 1.0,
+          "inner_candidate_log_losses": {
+            "0.01": 1.3327028675467165,
+            "0.1": 1.2623987072991218,
+            "1.0": 1.2603330188942623,
+            "10.0": 1.300108912585202
+          }
+        },
+        {
+          "fold": 2,
+          "held_out_trajectories": [
+            "django__django-11099",
+            "django__django-11119",
+            "django__django-11163",
+            "matplotlib__matplotlib-14623"
+          ],
+          "selected_C": 0.1,
+          "inner_candidate_log_losses": {
+            "0.01": 1.337488097272959,
+            "0.1": 1.2690744145980901,
+            "1.0": 1.2771171475272085,
+            "10.0": 1.3002407945508474
+          }
+        },
+        {
+          "fold": 3,
+          "held_out_trajectories": [
+            "astropy__astropy-12907",
+            "django__django-10554",
+            "django__django-11087",
+            "sphinx-doc__sphinx-10449"
+          ],
+          "selected_C": 1.0,
+          "inner_candidate_log_losses": {
+            "0.01": 1.3316809460537233,
+            "0.1": 1.2474605044397602,
+            "1.0": 1.2367065413730973,
+            "10.0": 1.2728809844337416
+          }
+        },
+        {
+          "fold": 4,
+          "held_out_trajectories": [
+            "matplotlib__matplotlib-13989",
+            "matplotlib__matplotlib-20488",
+            "pydata__xarray-3095",
+            "scikit-learn__scikit-learn-10297",
+            "scikit-learn__scikit-learn-10844"
+          ],
+          "selected_C": 1.0,
+          "inner_candidate_log_losses": {
+            "0.01": 1.3188397133515126,
+            "0.1": 1.2171640771391297,
+            "1.0": 1.1874043634941513,
+            "10.0": 1.2118191837881698
+          }
+        },
+        {
+          "fold": 5,
+          "held_out_trajectories": [
+            "django__django-10880",
+            "django__django-11133",
+            "django__django-12273",
+            "pytest-dev__pytest-10081",
+            "sphinx-doc__sphinx-10323"
+          ],
+          "selected_C": 1.0,
+          "inner_candidate_log_losses": {
+            "0.01": 1.3293119657057084,
+            "0.1": 1.234968379263497,
+            "1.0": 1.2314714204335333,
+            "10.0": 1.258530637494331
+          }
+        }
+      ],
+      "final_training_search": {
+        "candidate_log_losses": {
+          "0.01": 1.325641817864859,
+          "0.1": 1.2548825321841082,
+          "1.0": 1.2632608076434615,
+          "10.0": 1.2860118902049886
+        },
+        "selected_C": 0.1,
+        "folds": 5
+      },
+      "secondary_reused_holdout": {
+        "log_loss": 1.1573523793697054,
+        "multiclass_brier": 0.6392885083276026,
+        "argmax": {
+          "metrics": {
+            "case_pass_rate_percent": 69.84126984126983,
+            "case_exact_match_percent": 58.73015873015873,
+            "trajectory_pass_rate_percent": 7.936507936507937,
+            "cost_savings_score_percent": -63.25250077556269,
+            "combined_score_percent": 18.313858933093453
+          },
+          "selection_counts": {
+            "low": 26,
+            "mid_high": 6,
+            "mid": 5,
+            "high": 26
+          },
+          "under_route_percent": 30.158730158730158,
+          "over_route_percent": 11.11111111111111,
+          "high_required_recall_percent": 61.76470588235294
+        },
+        "q90": {
+          "metrics": {
+            "case_pass_rate_percent": 100.0,
+            "case_exact_match_percent": 55.55555555555556,
+            "trajectory_pass_rate_percent": 100.0,
+            "cost_savings_score_percent": 2.2664963483677902,
+            "combined_score_percent": 64.45551297598084
+          },
+          "selection_counts": {
+            "mid_high": 8,
+            "high": 55
+          },
+          "under_route_percent": 0.0,
+          "over_route_percent": 44.44444444444444,
+          "high_required_recall_percent": 100.0
+        }
+      }
+    },
+    "metadata_plus_direct_jev": {
+      "feature_names": [
+        "jev_p_low",
+        "jev_p_mid",
+        "jev_p_mid_high",
+        "jev_p_high",
+        "jev_entropy",
+        "jev_margin",
+        "step_progress",
+        "log_total_steps",
+        "log_message_count",
+        "log_character_count",
+        "assistant_message_fraction",
+        "tool_message_fraction",
+        "has_tool_call",
+        "last_role_assistant_or_tool"
+      ],
+      "feature_count": 14,
+      "primary_nested_oof": {
+        "log_loss": 1.2616497149636532,
+        "multiclass_brier": 0.6777478007929638,
+        "argmax": {
+          "metrics": {
+            "case_pass_rate_percent": 63.492063492063494,
+            "case_exact_match_percent": 47.08994708994709,
+            "trajectory_pass_rate_percent": 0.0,
+            "cost_savings_score_percent": -69.15060713781939,
+            "combined_score_percent": 10.357850861047798
+          },
+          "selection_counts": {
+            "low": 57,
+            "mid_high": 40,
+            "mid": 27,
+            "high": 65
+          },
+          "under_route_percent": 36.507936507936506,
+          "over_route_percent": 16.402116402116402,
+          "high_required_recall_percent": 49.48453608247423
+        },
+        "q90": {
+          "metrics": {
+            "case_pass_rate_percent": 98.94179894179894,
+            "case_exact_match_percent": 52.91005291005291,
+            "trajectory_pass_rate_percent": 92.06349206349206,
+            "cost_savings_score_percent": -5.367181087948041,
+            "combined_score_percent": 59.637040706848964
+          },
+          "selection_counts": {
+            "mid_high": 26,
+            "high": 163
+          },
+          "under_route_percent": 1.0582010582010581,
+          "over_route_percent": 46.03174603174603,
+          "high_required_recall_percent": 97.9381443298969
+        }
+      },
+      "outer_folds": [
+        {
+          "fold": 1,
+          "held_out_trajectories": [
+            "django__django-11999",
+            "django__django-12325",
+            "psf__requests-1724",
+            "pydata__xarray-2905"
+          ],
+          "selected_C": 0.1,
+          "inner_candidate_log_losses": {
+            "0.01": 1.3161707950973773,
+            "0.1": 1.2734121060540313,
+            "1.0": 1.3481613280118478,
+            "10.0": 1.4829232061136004
+          }
+        },
+        {
+          "fold": 2,
+          "held_out_trajectories": [
+            "django__django-11099",
+            "django__django-11119",
+            "django__django-11163",
+            "matplotlib__matplotlib-14623"
+          ],
+          "selected_C": 0.1,
+          "inner_candidate_log_losses": {
+            "0.01": 1.3104967920323192,
+            "0.1": 1.2771206155302726,
+            "1.0": 1.36883238002036,
+            "10.0": 1.4905475398905572
+          }
+        },
+        {
+          "fold": 3,
+          "held_out_trajectories": [
+            "astropy__astropy-12907",
+            "django__django-10554",
+            "django__django-11087",
+            "sphinx-doc__sphinx-10449"
+          ],
+          "selected_C": 1.0,
+          "inner_candidate_log_losses": {
+            "0.01": 1.2943392327923682,
+            "0.1": 1.2025916442119569,
+            "1.0": 1.1992845242144203,
+            "10.0": 1.247672551462232
+          }
+        },
+        {
+          "fold": 4,
+          "held_out_trajectories": [
+            "matplotlib__matplotlib-13989",
+            "matplotlib__matplotlib-20488",
+            "pydata__xarray-3095",
+            "scikit-learn__scikit-learn-10297",
+            "scikit-learn__scikit-learn-10844"
+          ],
+          "selected_C": 0.1,
+          "inner_candidate_log_losses": {
+            "0.01": 1.2991812750858642,
+            "0.1": 1.2200431041851219,
+            "1.0": 1.2386175526747887,
+            "10.0": 1.3758621860191802
+          }
+        },
+        {
+          "fold": 5,
+          "held_out_trajectories": [
+            "django__django-10880",
+            "django__django-11133",
+            "django__django-12273",
+            "pytest-dev__pytest-10081",
+            "sphinx-doc__sphinx-10323"
+          ],
+          "selected_C": 0.1,
+          "inner_candidate_log_losses": {
+            "0.01": 1.2960199974145474,
+            "0.1": 1.2243886732854588,
+            "1.0": 1.3396590492022828,
+            "10.0": 1.598178452532196
+          }
+        }
+      ],
+      "final_training_search": {
+        "candidate_log_losses": {
+          "0.01": 1.2909348209083567,
+          "0.1": 1.2364859160782606,
+          "1.0": 1.3047388239349829,
+          "10.0": 1.4175090124420238
+        },
+        "selected_C": 0.1,
+        "folds": 5
+      },
+      "secondary_reused_holdout": {
+        "log_loss": 1.1383222579946206,
+        "multiclass_brier": 0.6297595691092372,
+        "argmax": {
+          "metrics": {
+            "case_pass_rate_percent": 68.25396825396825,
+            "case_exact_match_percent": 58.73015873015873,
+            "trajectory_pass_rate_percent": 0.0,
+            "cost_savings_score_percent": -65.89009649434682,
+            "combined_score_percent": 15.27350762244504
+          },
+          "selection_counts": {
+            "low": 24,
+            "mid_high": 4,
+            "mid": 11,
+            "high": 24
+          },
+          "under_route_percent": 31.746031746031743,
+          "over_route_percent": 9.523809523809524,
+          "high_required_recall_percent": 58.82352941176471
+        },
+        "q90": {
+          "metrics": {
+            "case_pass_rate_percent": 100.0,
+            "case_exact_match_percent": 55.55555555555556,
+            "trajectory_pass_rate_percent": 100.0,
+            "cost_savings_score_percent": 2.2664963483677902,
+            "combined_score_percent": 64.45551297598084
+          },
+          "selection_counts": {
+            "mid_high": 8,
+            "high": 55
+          },
+          "under_route_percent": 0.0,
+          "over_route_percent": 44.44444444444444,
+          "high_required_recall_percent": 100.0
+        }
+      }
+    },
+    "metadata_plus_decomposed_jev": {
+      "feature_names": [
+        "jev_scope_p0",
+        "jev_scope_p1",
+        "jev_scope_p2",
+        "jev_scope_entropy",
+        "jev_scope_margin",
+        "jev_uncertainty_p0",
+        "jev_uncertainty_p1",
+        "jev_uncertainty_p2",
+        "jev_uncertainty_entropy",
+        "jev_uncertainty_margin",
+        "jev_recovery_p0",
+        "jev_recovery_p1",
+        "jev_recovery_p2",
+        "jev_recovery_entropy",
+        "jev_recovery_margin",
+        "jev_correctness_risk_p0",
+        "jev_correctness_risk_p1",
+        "jev_correctness_risk_p2",
+        "jev_correctness_risk_entropy",
+        "jev_correctness_risk_margin",
+        "jev_verification_burden_p0",
+        "jev_verification_burden_p1",
+        "jev_verification_burden_p2",
+        "jev_verification_burden_entropy",
+        "jev_verification_burden_margin",
+        "step_progress",
+        "log_total_steps",
+        "log_message_count",
+        "log_character_count",
+        "assistant_message_fraction",
+        "tool_message_fraction",
+        "has_tool_call",
+        "last_role_assistant_or_tool"
+      ],
+      "feature_count": 33,
+      "primary_nested_oof": {
+        "log_loss": 1.3708341653168687,
+        "multiclass_brier": 0.7253916129475587,
+        "argmax": {
+          "metrics": {
+            "case_pass_rate_percent": 67.19576719576719,
+            "case_exact_match_percent": 43.386243386243386,
+            "trajectory_pass_rate_percent": 0.0,
+            "cost_savings_score_percent": -80.87959306855974,
+            "combined_score_percent": 7.425604378362708
+          },
+          "selection_counts": {
+            "mid_high": 50,
+            "high": 70,
+            "low": 41,
+            "mid": 28
+          },
+          "under_route_percent": 32.804232804232804,
+          "over_route_percent": 23.809523809523807,
+          "high_required_recall_percent": 54.63917525773196
+        },
+        "q90": {
+          "metrics": {
+            "case_pass_rate_percent": 97.88359788359789,
+            "case_exact_match_percent": 52.91005291005291,
+            "trajectory_pass_rate_percent": 87.3015873015873,
+            "cost_savings_score_percent": -7.265705182109939,
+            "combined_score_percent": 57.70738322828204
+          },
+          "selection_counts": {
+            "mid_high": 28,
+            "high": 159,
+            "mid": 2
+          },
+          "under_route_percent": 2.1164021164021163,
+          "over_route_percent": 44.97354497354497,
+          "high_required_recall_percent": 95.87628865979381
+        }
+      },
+      "outer_folds": [
+        {
+          "fold": 1,
+          "held_out_trajectories": [
+            "django__django-11999",
+            "django__django-12325",
+            "psf__requests-1724",
+            "pydata__xarray-2905"
+          ],
+          "selected_C": 0.01,
+          "inner_candidate_log_losses": {
+            "0.01": 1.2795266362738547,
+            "0.1": 1.2960636837238542,
+            "1.0": 1.6420217538522714,
+            "10.0": 2.463383205636326
+          }
+        },
+        {
+          "fold": 2,
+          "held_out_trajectories": [
+            "django__django-11099",
+            "django__django-11119",
+            "django__django-11163",
+            "matplotlib__matplotlib-14623"
+          ],
+          "selected_C": 0.1,
+          "inner_candidate_log_losses": {
+            "0.01": 1.2569988617275012,
+            "0.1": 1.2396842216523505,
+            "1.0": 1.5024564092979245,
+            "10.0": 2.256369463556442
+          }
+        },
+        {
+          "fold": 3,
+          "held_out_trajectories": [
+            "astropy__astropy-12907",
+            "django__django-10554",
+            "django__django-11087",
+            "sphinx-doc__sphinx-10449"
+          ],
+          "selected_C": 0.1,
+          "inner_candidate_log_losses": {
+            "0.01": 1.236479078086699,
+            "0.1": 1.1760727124994492,
+            "1.0": 1.3944324489784896,
+            "10.0": 2.076560077428526
+          }
+        },
+        {
+          "fold": 4,
+          "held_out_trajectories": [
+            "matplotlib__matplotlib-13989",
+            "matplotlib__matplotlib-20488",
+            "pydata__xarray-3095",
+            "scikit-learn__scikit-learn-10297",
+            "scikit-learn__scikit-learn-10844"
+          ],
+          "selected_C": 0.1,
+          "inner_candidate_log_losses": {
+            "0.01": 1.2619775860983542,
+            "0.1": 1.2157994254244737,
+            "1.0": 1.4511454306177058,
+            "10.0": 2.539291533522568
+          }
+        },
+        {
+          "fold": 5,
+          "held_out_trajectories": [
+            "django__django-10880",
+            "django__django-11133",
+            "django__django-12273",
+            "pytest-dev__pytest-10081",
+            "sphinx-doc__sphinx-10323"
+          ],
+          "selected_C": 0.1,
+          "inner_candidate_log_losses": {
+            "0.01": 1.2634960577902334,
+            "0.1": 1.2486655842021759,
+            "1.0": 1.60565725319853,
+            "10.0": 2.5461228938252956
+          }
+        }
+      ],
+      "final_training_search": {
+        "candidate_log_losses": {
+          "0.01": 1.2887373745407873,
+          "0.1": 1.3703778922816365,
+          "1.0": 1.8211174993765336,
+          "10.0": 2.479964785876503
+        },
+        "selected_C": 0.01,
+        "folds": 5
+      },
+      "secondary_reused_holdout": {
+        "log_loss": 1.2345703787764875,
+        "multiclass_brier": 0.6757110362016935,
+        "argmax": {
+          "metrics": {
+            "case_pass_rate_percent": 65.07936507936508,
+            "case_exact_match_percent": 50.79365079365079,
+            "trajectory_pass_rate_percent": 0.0,
+            "cost_savings_score_percent": -78.21449392426885,
+            "combined_score_percent": 9.414630487186754
+          },
+          "selection_counts": {
+            "mid_high": 15,
+            "mid": 7,
+            "low": 21,
+            "high": 20
+          },
+          "under_route_percent": 34.92063492063492,
+          "over_route_percent": 14.285714285714285,
+          "high_required_recall_percent": 47.05882352941176
+        },
+        "q90": {
+          "metrics": {
+            "case_pass_rate_percent": 100.0,
+            "case_exact_match_percent": 53.96825396825397,
+            "trajectory_pass_rate_percent": 100.0,
+            "cost_savings_score_percent": 0.5562294646402599,
+            "combined_score_percent": 63.631120858223554
+          },
+          "selection_counts": {
+            "high": 61,
+            "mid_high": 2
+          },
+          "under_route_percent": 0.0,
+          "over_route_percent": 46.03174603174603,
+          "high_required_recall_percent": 100.0
+        }
+      }
+    }
+  },
+  "jev_collection": {
+    "completed_calls": 252,
+    "api_errors": 0,
+    "selected_rows_cost_usd": 0.0699069,
+    "campaign_accounted_cost_usd": 0.0699069
+  }
+}
