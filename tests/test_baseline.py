@@ -23,7 +23,17 @@ from router_eval.twinrouterbench import (
     tier_probabilities,
     visible_state,
 )
-from router_eval.twin_calibration import features as calibration_features, quantile_tiers
+from router_eval.twin_calibration import (
+    features as calibration_features,
+    metadata_features,
+    quantile_tiers,
+)
+from router_eval.twin_decomposition import (
+    DECOMPOSED_FEATURE_NAMES,
+    DECOMPOSED_QUESTIONS,
+    decomposed_features,
+    nested_oof_probabilities,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -356,3 +366,48 @@ def test_calibrated_quantile_routes_up_with_uncertainty():
     matrix = np.array([[.6, .2, .1, .1], [.05, .05, .1, .8]])
     assert quantile_tiers(matrix, .5).tolist() == [0, 3]
     assert quantile_tiers(matrix, .9).tolist() == [2, 3]
+
+
+def test_decomposed_questions_and_features_do_not_expose_targets():
+    serialized = json.dumps(DECOMPOSED_QUESTIONS)
+    assert all(
+        name not in serialized
+        for name in ("DeepSeek", "MiniMax", "Gemini", "Claude", "low tier", "high tier")
+    )
+    assert set(DECOMPOSED_QUESTIONS) == {
+        "scope",
+        "uncertainty",
+        "recovery",
+        "correctness_risk",
+        "verification_burden",
+    }
+    row = {
+        "id": "x",
+        "benchmark": "swebench",
+        "messages": [{"role": "user", "content": "fix it"}],
+        "step_index": 1,
+        "total_steps": 3,
+        "target_tier_id": 0,
+    }
+    response = {
+        "model": "typesafe/jev-1.13-20260917",
+        "answers": {
+            key: {"probabilities": {"0": .6, "1": .3, "2": .1}}
+            for key in DECOMPOSED_QUESTIONS
+        },
+    }
+    first = decomposed_features(row, response)
+    assert len(first) == len(DECOMPOSED_FEATURE_NAMES) + len(metadata_features(row))
+    row["target_tier_id"] = 3
+    assert np.array_equal(first, decomposed_features(row, response))
+
+
+def test_nested_oof_probabilities_cover_each_row_once():
+    labels = np.tile(np.arange(4), 10)
+    groups = np.repeat(np.arange(10), 4)
+    values = np.eye(4)[labels]
+    matrix, folds = nested_oof_probabilities(values, labels, groups)
+    assert matrix.shape == (40, 4)
+    assert np.allclose(matrix.sum(axis=1), 1)
+    held_out = [group for fold in folds for group in fold["held_out_trajectories"]]
+    assert sorted(held_out) == list(range(10))

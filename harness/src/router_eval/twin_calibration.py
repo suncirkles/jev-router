@@ -34,13 +34,16 @@ from router_eval.twinrouterbench import (
 )
 
 
-FEATURE_NAMES = (
+DIRECT_JEV_FEATURE_NAMES = (
     "jev_p_low",
     "jev_p_mid",
     "jev_p_mid_high",
     "jev_p_high",
     "jev_entropy",
     "jev_margin",
+)
+
+METADATA_FEATURE_NAMES = (
     "step_progress",
     "log_total_steps",
     "log_message_count",
@@ -50,6 +53,8 @@ FEATURE_NAMES = (
     "has_tool_call",
     "last_role_assistant_or_tool",
 )
+
+FEATURE_NAMES = DIRECT_JEV_FEATURE_NAMES + METADATA_FEATURE_NAMES
 
 
 def _load_rows(bank: Path) -> list[dict[str, Any]]:
@@ -88,25 +93,15 @@ def _probabilities(
     return np.array(tier_probabilities(response, option_to_tier), dtype=np.float64)
 
 
-def features(
-    row: dict[str, Any],
-    response: dict[str, Any],
-    option_to_tier: tuple[int, ...] = IDENTITY_OPTION_TO_TIER,
-) -> np.ndarray:
-    """Router-visible features only; target tier and evaluator metadata are excluded."""
-    probs = _probabilities(response, option_to_tier)
+def metadata_features(row: dict[str, Any]) -> np.ndarray:
+    """Return locally computed router-visible trajectory features."""
     messages = row["messages"]
     count = max(len(messages), 1)
     roles = [str(message.get("role", "")) for message in messages]
     serialized = json.dumps(messages, ensure_ascii=False)
-    entropy = -sum(value * math.log(max(value, 1e-12)) for value in probs)
-    ordered = sorted(probs, reverse=True)
     total_steps = max(int(row.get("total_steps", 1)), 1)
     return np.array(
         [
-            *probs,
-            entropy,
-            ordered[0] - ordered[1],
             int(row.get("step_index", 1)) / total_steps,
             math.log1p(total_steps),
             math.log1p(len(messages)),
@@ -117,6 +112,23 @@ def features(
             float(bool(roles) and roles[-1] in {"assistant", "tool"}),
         ],
         dtype=np.float64,
+    )
+
+
+def features(
+    row: dict[str, Any],
+    response: dict[str, Any],
+    option_to_tier: tuple[int, ...] = IDENTITY_OPTION_TO_TIER,
+) -> np.ndarray:
+    """Router-visible direct-Jev and metadata features; target labels are excluded."""
+    probs = _probabilities(response, option_to_tier)
+    entropy = -sum(value * math.log(max(value, 1e-12)) for value in probs)
+    ordered = sorted(probs, reverse=True)
+    return np.concatenate(
+        [
+            np.array([*probs, entropy, ordered[0] - ordered[1]], dtype=np.float64),
+            metadata_features(row),
+        ]
     )
 
 
