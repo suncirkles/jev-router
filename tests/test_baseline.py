@@ -34,6 +34,12 @@ from router_eval.twin_decomposition import (
     decomposed_features,
     nested_oof_probabilities,
 )
+from router_eval.twin_knn import (
+    compact_jev_features,
+    knn_probabilities,
+    nested_knn_probabilities,
+    serialize_state,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -280,6 +286,59 @@ def test_twinrouter_visible_state_excludes_labels():
     assert "target_tier" not in state
     assert "target_tier_id" not in state
     assert "notes" not in state
+
+
+def test_knn_state_serialization_is_router_visible_and_keeps_recent_evidence():
+    row = {
+        "id": "secret-label-must-not-appear",
+        "benchmark": "swebench",
+        "scenario": "code_swe",
+        "step_index": 3,
+        "total_steps": 5,
+        "target_tier": "high",
+        "target_tier_id": 3,
+        "messages": [
+            {"role": "user", "content": "fix the cache"},
+            {"role": "assistant", "content": "x" * 100},
+            {"role": "tool", "content": "LATEST FAILURE"},
+        ],
+    }
+    rendered = serialize_state(row, original_limit=20, recent_limit=80)
+    assert "fix the cache" in rendered
+    assert "LATEST FAILURE" in rendered
+    assert "target_tier" not in rendered
+    assert "secret-label-must-not-appear" not in rendered
+
+
+def test_compact_jev_features_are_expected_normalized_severities():
+    answers = {
+        key: {"probabilities": {"0": 0.25, "1": 0.25, "2": 0.5}}
+        for key in DECOMPOSED_QUESTIONS
+    }
+    assert compact_jev_features({"answers": answers}).tolist() == pytest.approx([0.625] * 5)
+
+
+def test_knn_probabilities_prefer_nearest_label_and_remain_calibratable():
+    train = np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
+    labels = np.array([0, 2, 3])
+    query = np.array([[0.99, 0.01]])
+    probabilities = knn_probabilities(
+        train, labels, query, k=2, weighting="distance", smoothing=0.25
+    )
+    assert probabilities.shape == (1, 4)
+    assert probabilities.sum(axis=1).tolist() == pytest.approx([1.0])
+    assert int(np.argmax(probabilities[0])) == 0
+    assert np.all(probabilities > 0)
+
+
+def test_nested_knn_returns_one_probability_row_per_input():
+    embeddings = np.eye(20, dtype=np.float64)
+    labels = np.array([index % 4 for index in range(20)])
+    groups = np.array([f"trajectory-{index // 2}" for index in range(20)])
+    probabilities, folds = nested_knn_probabilities(embeddings, labels, groups)
+    assert probabilities.shape == (20, 4)
+    assert probabilities.sum(axis=1).tolist() == pytest.approx([1.0] * 20)
+    assert len(folds) == 5
 
 
 def test_twinrouter_jev_selects_highest_probability_and_conservative_tie():
