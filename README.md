@@ -9,7 +9,22 @@ The caller owns the agent loop, tools, workspace, approvals and selected-model i
 - `jev-route`: validated input contract, Jev adapter, deterministic B0 policy, durable request journal and CLI.
 - `jev-route-eval`: archived benchmark ingestion, frozen splits, published RouteLLM MF comparator, metrics and reports. Runtime does not import this package.
 
-Local Python library/CLI is the current delivery. HTTP service, framework adapters, MCP wrappers and cloud deployment are deliberately future work. Agents can call the Python functions or CLI today. No changes to CartSavvy or its deployment are required.
+Local Python library/CLI is the current delivery. HTTP service, framework adapters, MCP wrappers and cloud deployment are deliberately future work. Agents can call the Python functions or CLI today.
+
+This is a research repository. The evidence below does not yet establish that Jev routing beats simple controls; read the reports before relying on it.
+
+## Setup
+
+Requires Python 3.12+. From the repository root:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1          # POSIX: source .venv/bin/activate
+pip install -e . -e harness pytest
+python -m pytest tests -q
+```
+
+Live classification calls need `OPENROUTER_API_KEY` in the environment. Never put it in tracked files. The KNN embedding script additionally needs a configured [Modal](https://modal.com) account.
 
 ## First pilot
 
@@ -35,29 +50,23 @@ The [opaque-identity diagnostic](evidence/twin-opaque-001/REPORT.md) hides all t
 
 The [task-decomposition ablation](evidence/twin-decomposition-001/REPORT.md) compares metadata-only calibration with direct and decomposed Jev signals using nested trajectory-grouped evaluation. The predeclared five-question representation performed worse than metadata alone. A post-hoc five-scalar representation was more promising, but its trajectory-bootstrap interval includes no improvement and its q90 policy still has negative failure-aware savings. Current evidence therefore does not establish incremental routing value from Jev, and dynamic execution remains deferred.
 
+The [semantic KNN experiment](evidence/twin-knn-001/REPORT.md) routes by nearest neighbours over Qwen3 embeddings of the visible agent state, using the same nested trajectory-grouped folds. Embeddings alone did no better than metadata, and their q90 policy routed every step to `high`. Embeddings plus metadata gave the best log loss so far (1.1330 vs 1.2696 for metadata), but q90 savings stayed negative (-0.63%). Adding compact Jev scalars made log loss worse and left q90 decisions unchanged. No bootstrap intervals were computed, so the improvement still needs confirmation on fresh trajectories.
+
 ```powershell
-$env:PYTHONPATH = "$PWD\src;$PWD\harness\src"
-$python = 'D:\projects\Gen-AI\agentic\agentic\Scripts\python.exe'
-& $python -m router_eval.twinrouterbench `
+python -m router_eval.twinrouterbench `
   --benchmark-root D:\path\to\TwinRouterBench `
   --output artifacts\twin-static-001 `
   --trajectories 8
 ```
 
-## Run from this machine
+## Reproducing the first pilot
 
-The interpreter resolved from `D:\\projects\\Gen-AI\\loadenv.bat` is `D:\\projects\\Gen-AI\\agentic\\agentic\\Scripts\\python.exe`. No dependencies were installed into that shared environment.
-
-PowerShell, from the repository root:
+PowerShell, from the repository root, with the packages installed as in [Setup](#setup) and `OPENROUTER_API_KEY` set:
 
 ```powershell
-$env:PYTHONPATH = "$PWD\\src;$PWD\\harness\\src"
-$python = 'D:\\projects\\Gen-AI\\agentic\\agentic\\Scripts\\python.exe'
-# OPENROUTER_API_KEY must already be set; never put it in tracked files.
-& $python scripts/restore_sources.py
-& $python -m router_eval.cli run --root . --output artifacts/pilot-001
-& $python -m router_eval.cli report --output artifacts/pilot-001
-& $python -m pytest tests -q -p no:cacheprovider --basetemp (Join-Path $PWD ('.cache/pytest-' + [guid]::NewGuid().ToString('N')))
+python scripts/restore_sources.py
+python -m router_eval.cli run --root . --output artifacts/pilot-001
+python -m router_eval.cli report --output artifacts/pilot-001
 ```
 
 A new output directory incurs new classification/embedding calls. An existing directory reuses journaled exact requests and rejects changed experiment manifests. The USD 0.50 cap is a conservative client reservation budget, not a provider-enforced billing limit. If a request times out, reconcile the pending record before retrying. The journal is single-writer; do not run two processes against it.
@@ -106,3 +115,7 @@ Implement one lever at a time. Keep each pilot frozen and remeasure full task co
 - [12-factor agents](https://github.com/humanlayer/12-factor-agents)
 
 The NumPy comparator follows RouteLLM's published MF inference equations. It is a modified implementation; PyTorch parity has not been established. See `THIRD_PARTY_NOTICES.md` and the included upstream Apache license. Checkpoint and source revisions/hashes are recorded with the pilot evidence.
+
+## License
+
+MIT; see [LICENSE](LICENSE). The RouteLLM-derived comparator code remains subject to the Apache-2.0 license in `licenses/`.

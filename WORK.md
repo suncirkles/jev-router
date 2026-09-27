@@ -6,6 +6,6 @@ Acceptance: reproducible data and split manifests; no outcome leakage; real Jev 
 
 Budget: at most USD 0.50 in new API usage for the pilot. Existing account key quota is not changed. Historical solver cost is simulated, not newly spent.
 
-Tracking: local work item only. New standalone repository has no GitHub remote; no issue is created in the unrelated CartSavvy tracker.
+Tracking: local work item only; no issue tracker was used.
 
 Status: complete. The frozen 20-task calibration and 40-task evaluation pilot ran successfully; 22 checks and isolated wheel smoke tests passed. See `evidence/pilot-001/REPORT.md`.

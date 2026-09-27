@@ -9,3 +9,6 @@ dist/
 .package-smoke/
 .pytest_cache/
 .env
+*.out
+*.err
+.venv/
