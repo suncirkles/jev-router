@@ -9,7 +9,7 @@ dependencies = [
   "jev-route==0.1.0",
   "numpy>=1.26",
   "scikit-learn>=1.5",
-  "sentence-transformers>=5.1,<6",
+  "sentence-transformers>=6.1.0,<7",
 ]
 [project.scripts]
 jev-route-eval = "router_eval.cli:main"
